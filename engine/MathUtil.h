@@ -129,16 +129,44 @@ struct Line {
     Line(Point2D p1 = {0, 0}, Point2D p2 = {0, 0}) : p1(p1), p2(p2) {}
     Line(float x1, float y1, float x2, float y2) : p1(x1, y1), p2(x2, y2) {}
     float Length() const {
-        // TODO: write this code
-        return 0;
+        // calculates the length of the line segment using distance formula
+        return p1.Distance(p2);
     }
     Point2D ClosestPoint(const Point2D &p) const {
         // TODO: write this code
         return p;
     }
     bool Crosses(Line other, Point2D &crossingPoint) const {
-        // TODO: write this code
-        return false;
+        // calculates where two lines cross, if they do, and returns the crossing point in crossingPoint
+        // 
+        Point2D a = p1; // point a
+        Point2D b = p2; // point b
+        Point2D c = other.p1; // point c
+        Point2D d = other.p2; // point d
+
+        Point2D vab = b - a; // vector ab
+        Point2D vcd = d - c; // vector cd
+
+        float t, u; // t and u are where on the lines ab and cd respectively are crossed
+        // calculate u
+        float tophalf = Point2D::Cross((a-c),vab);
+        float bottomhalf = Point2D::Cross(vcd,vab);
+        if (bottomhalf == 0){ return false;}
+        u = tophalf/bottomhalf;
+
+        // calculate t
+        tophalf = Point2D::Cross((c-a),vcd);
+        bottomhalf = Point2D::Cross(vab,vcd);
+        if (bottomhalf == 0){ return false;}
+        t = tophalf/bottomhalf;
+        
+        // enforce limitations. if fails, lines cross outside of our segments
+        if (t < 0 || t > 1 || u < 0 || u > 1){return false;}
+
+        // calculate crossing point
+        crossingPoint = a + vab*t;
+
+        return true;
     }
 };
 
