@@ -99,7 +99,11 @@ struct Point2D {
     }
     static float Cross(Point2D a, Point2D b) {
         // cross product of a and b
-        return a.x*b.y - a.y*b.x;;
+        return a.x*b.y - a.y*b.x;
+    }
+    float Cross(Point2D b) const {
+        // cross product of this and b
+        return x * b.y - y * b.x;
     }
     void Normalize() {
         // scaling so length is 1 but the direction is kept
@@ -133,12 +137,28 @@ struct Line {
         return p1.Distance(p2);
     }
     Point2D ClosestPoint(const Point2D &p) const {
-        // TODO: write this code
-        return p;
+        // returns the closest point on the line segment to point p
+        Point2D ap = p - p1; // vector from p1 to p
+        Point2D ab = p2 - p1; // vector from p1 to p2
+        float ablen = Length(); // length of ab
+        if (ablen == 0) {
+            // ab is a single point, therefore is the point we want
+            return p1;
+        }
+
+        float d; // represents distance on ab where the closest point is
+        d = Point2D::Dot(ab,ap) / ablen;
+
+        // handle if it lands outside of actual ab line
+        if (d < 0){ return p1; } // lands before a, return a
+        if (d > ablen){ return p2; } // lands after b, return b
+
+        // walk along ab to point
+        ab.Normalize();
+        return p1 + ab*d;
     }
     bool Crosses(Line other, Point2D &crossingPoint) const {
         // calculates where two lines cross, if they do, and returns the crossing point in crossingPoint
-        // 
         Point2D a = p1; // point a
         Point2D b = p2; // point b
         Point2D c = other.p1; // point c
@@ -147,17 +167,17 @@ struct Line {
         Point2D vab = b - a; // vector ab
         Point2D vcd = d - c; // vector cd
 
-        float t, u; // t and u are where on the lines ab and cd respectively are crossed
+        float t, u; // fraction (0–1) along ab and cd where the crossing lies.
         // calculate u
         float tophalf = Point2D::Cross((a-c),vab);
         float bottomhalf = Point2D::Cross(vcd,vab);
-        if (bottomhalf == 0){ return false;}
+        if (bottomhalf == 0){ return false;} // lines parallel or 0 length
         u = tophalf/bottomhalf;
 
         // calculate t
         tophalf = Point2D::Cross((c-a),vcd);
         bottomhalf = Point2D::Cross(vab,vcd);
-        if (bottomhalf == 0){ return false;}
+        if (bottomhalf == 0){ return false;} // lines parallel or 0 length
         t = tophalf/bottomhalf;
         
         // enforce limitations. if fails, lines cross outside of our segments
@@ -171,7 +191,8 @@ struct Line {
 };
 
 static std::ostream &operator<<(std::ostream &os, const Line &l) {
-    // TODO: write this code
+    // prints points (p1, p2)
+    os << "(" << l.p1 << ", " << l.p2 << ")";
     return os;
 }
 
