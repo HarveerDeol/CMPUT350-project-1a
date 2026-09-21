@@ -9,8 +9,7 @@ namespace CMPUT350 {
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name)),
       mFont(std::make_shared<sf::Font>()),
-      mDrawContext(mWindow, mFont),
-      mContext(std::make_shared<GameContext>()) {
+      mDrawContext(mWindow, mFont) {
 
     // set framerate
     mWindow->setFramerateLimit(30);
@@ -22,8 +21,8 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     }
 
     // set up GameContext
-    mContext->mEngineView = this;
-    mContext->ScreenContext = &mDrawContext;
+    mContext.mEngineView = this;
+    mContext.ScreenContext = &mDrawContext;
 
 }
 
@@ -62,14 +61,14 @@ void GameEngine::Run() {
         // 1. Activate and initialize any objects added during the last frame
         for (size_t i=0; i < mPendingObjects.size();){
             mGameObjects.push_back(mPendingObjects[i]);
-            mPendingObjects[i]->Initialize(mContext.get());
+            mPendingObjects[i]->Initialize(&mContext);
             i++;
         }
         // clean up pending to add new objects later
         mPendingObjects.clear();
 
         // 2. Process events
-        ProcessEvents(mContext.get());
+        ProcessEvents(&mContext);
 
         // 3. Update game objects
 
