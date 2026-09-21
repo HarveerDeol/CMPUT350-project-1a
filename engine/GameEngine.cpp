@@ -3,18 +3,33 @@
 /// @brief
 namespace CMPUT350 {
 #include "FontData.h"
+// Creates the game window capped at 30 frames per second, loads
+// the font embedded in FontData.h, and builds the DrawContext and
+// GameContext.
+GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
+    : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name)),
+      mFont(std::make_shared<sf::Font>()),
+      mDrawContext(mWindow, mFont),
+      mContext(std::make_shared<GameContext>()) {
 
-GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
-    // Sample font loading code
-    //	if (!mFont->openFromMemory(&_font, _font_len))
-    //	{
-    //		fprintf(stderr, "WARNING: Font did not load.\n");
-    //	}
+    // set framerate
+    mWindow->setFramerateLimit(30);
+    
+    // Font loading code
+    if (!mFont->openFromMemory(&_font, _font_len))
+    {
+        fprintf(stderr, "WARNING: Font did not load.\n");
+    }
+
+    // set up GameContext
+    mContext->mEngineView = this;
+    mContext->ScreenContext = &mDrawContext;
+
 }
 
 GameEngine::~GameEngine() {
     // Cleanup resources
-    // mWindow->close();
+    mWindow->close();
 }
 
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {}
@@ -26,7 +41,7 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {}
  * all objects have been destroyed.
  */
 void GameEngine::Run() {
-    while (true)  // window is open
+    while (mWindow->isOpen())  // window is open
     {
         // 0. Remove any objects that are now dead
 
@@ -41,12 +56,14 @@ void GameEngine::Run() {
         // 5. Late updates
 
         // Clear window
+        mWindow->clear();
 
         // 6. Render background
 
         // 7. Render foreground
 
         // Actually render to window
+        mWindow->display();
     }
 }
 
