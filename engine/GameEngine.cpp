@@ -48,6 +48,7 @@ void GameEngine::Run() {
         // 1. Activate and initialize any objects added during the last frame
 
         // 2. Process events
+        ProcessEvents(mContext.get());
 
         // 3. Update game objects
 
@@ -67,23 +68,27 @@ void GameEngine::Run() {
     }
 }
 
-// Sample code for processing events
-
-// bool GameEngine::ProcessEvents(GameContext *context)
-//{
-//	while (const std::optional event = mWindow->pollEvent())
-//	{
-//		if (event->is<sf::Event::Closed>())
-//		{
-//		}
-//		else if (event->is<sf::Event::Resized>())
-//		{
-//		}
-//		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-//		{
-//			// use keyPressed->unicode to get character
-//		}
-//	}
-// }
+bool GameEngine::ProcessEvents(GameContext *context)
+{
+	while (const std::optional event = mWindow->pollEvent())
+	{
+		if (event->is<sf::Event::Closed>())
+		{
+			mWindow->close();
+		}
+		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
+		{
+			if (keyPressed->unicode < 128)
+			{
+				char key = static_cast<char>(keyPressed->unicode);
+				for (auto& obj : mGameObjects)
+				{
+					obj->HandleKeyEvent(context, key);
+				}
+			}
+		}
+	}
+	return mWindow->isOpen();
+}
 
 }  // namespace CMPUT350
