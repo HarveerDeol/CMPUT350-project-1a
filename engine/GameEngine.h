@@ -38,6 +38,7 @@ private:
     DrawContext mDrawContext;
     std::shared_ptr<GameContext> mContext;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
+    std::vector<std::shared_ptr<GameObject>> mPendingObjects;
 };
 
 }  // namespace CMPUT350
