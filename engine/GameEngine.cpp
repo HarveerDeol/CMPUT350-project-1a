@@ -9,8 +9,7 @@ namespace CMPUT350 {
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name)),
       mFont(std::make_shared<sf::Font>()),
-      mDrawContext(mWindow, mFont),
-      mContext(std::make_shared<GameContext>()) {
+      mDrawContext(mWindow, mFont) {
 
     // set framerate
     mWindow->setFramerateLimit(30);
@@ -22,8 +21,8 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     }
 
     // set up GameContext
-    mContext->mEngineView = this;
-    mContext->ScreenContext = &mDrawContext;
+    mContext.mEngineView = this;
+    mContext.ScreenContext = &mDrawContext;
 
 }
 
@@ -32,7 +31,10 @@ GameEngine::~GameEngine() {
     mWindow->close();
 }
 
-void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {}
+void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+    // add to pending objects to be added at the start of the next frame
+    mPendingObjects.push_back(gameObject);
+}
 
 /**
  * @method Run
@@ -44,11 +46,29 @@ void GameEngine::Run() {
     while (mWindow->isOpen())  // window is open
     {
         // 0. Remove any objects that are now dead
+        for (size_t i=0; i < mGameObjects.size();){
+            if (mGameObjects[i]->IsAlive()){
+                i++;
+            }
+            else{ // dead
+                // swap with last element, pop out to avoid O(n^2) time (which would be repeatedly shifting objects)
+                std::swap(mGameObjects[i],mGameObjects.back());
+                mGameObjects.pop_back();
+                // doesn't increment because we need to check the object it got swapped with
+            }
+        }
 
         // 1. Activate and initialize any objects added during the last frame
+        for (size_t i=0; i < mPendingObjects.size();){
+            mGameObjects.push_back(mPendingObjects[i]);
+            mPendingObjects[i]->Initialize(&mContext);
+            i++;
+        }
+        // clean up pending to add new objects later
+        mPendingObjects.clear();
 
         // 2. Process events
-        ProcessEvents(mContext.get());
+        ProcessEvents(&mContext);
 
         // 3. Update game objects
 
