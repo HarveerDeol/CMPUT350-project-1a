@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "CollisionObject.h"
 
 /// @brief
 namespace CMPUT350 {
@@ -35,16 +36,50 @@ void GameEngine::Run() {
         // 2. Process events
 
         // 3. Update game objects
+        for (auto& obj : mGameObjects) {
+            obj->Update(&mContext);
+        }
 
         // 4. Process collision events
+        for (size_t i = 0; i < mGameObjects.size(); i++) {
+            auto objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);
+            if (objA == nullptr) continue; // not a collision object, skip
+
+            for (size_t j = i + 1; j < mGameObjects.size(); j++) { // j starts at i+1: avoids self-checks and duplicate pairs
+                auto objB = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[j]);
+                if (objB == nullptr) continue;
+
+                Rect overlap = objA->GetBounds();
+                overlap &= objB->GetBounds(); // shrink to intersection region
+                if (overlap.width > 0 && overlap.height > 0) { // positive area means they actually overlap
+                    objA->CollisionEnter(objB);
+                    objB->CollisionEnter(objA);
+                }
+            }
+        }
 
         // 5. Late updates
+        for (auto& obj : mGameObjects) {
+            obj->LateUpdate(&mContext);
+        }
 
         // Clear window
 
         // 6. Render background
+        for (auto& obj : mGameObjects) {
+            auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
+            if (graphicsObj != nullptr) {
+                graphicsObj->RenderBackground(&mContext);
+            }
+        }
 
         // 7. Render foreground
+        for (auto& obj : mGameObjects) {
+            auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
+            if (graphicsObj != nullptr) {
+                graphicsObj->RenderForeground(&mContext);
+            }
+        }
 
         // Actually render to window
     }
