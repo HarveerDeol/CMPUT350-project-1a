@@ -32,13 +32,12 @@ public:
     void Run();
 
 private:
-    bool ProcessEvents(GameContext *context);
+    bool ProcessEvents(GameContext* context);
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
     DrawContext mDrawContext;
     GameContext mContext;
-
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingObjects;
 };

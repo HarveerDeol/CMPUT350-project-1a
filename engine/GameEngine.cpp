@@ -100,6 +100,7 @@ void GameEngine::Run() {
             obj->LateUpdate(&mContext);
         }
 
+        // Clear window
         mWindow->clear();
 
         // 6. Render background
@@ -115,6 +116,7 @@ void GameEngine::Run() {
 
         }
 
+        // Actually render to window
         mWindow->display();
     }
 }
