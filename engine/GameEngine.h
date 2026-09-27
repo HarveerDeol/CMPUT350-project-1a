@@ -8,8 +8,10 @@ class GameEngine;
 
 #include "EngineView.h"
 #include "GameObject.h"
+#include "GameContext.h"
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
+
 
 namespace CMPUT350 {
 
@@ -30,8 +32,15 @@ public:
     void Run();
 
 private:
-    //	std::shared_ptr<sf::RenderWindow> mWindow;
-    //	std::shared_ptr<sf::Font> mFont;
+    bool ProcessEvents(GameContext *context);
+
+    std::shared_ptr<sf::RenderWindow> mWindow;
+    std::shared_ptr<sf::Font> mFont;
+    DrawContext mDrawContext;
+    GameContext mContext;
+
+    std::vector<std::shared_ptr<GameObject>> mGameObjects;
+    std::vector<std::shared_ptr<GameObject>> mPendingObjects;
 };
 
 }  // namespace CMPUT350
