@@ -1,8 +1,10 @@
 #include "GameEngine.h"
+#include "CollisionObject.h"
+#include "GraphicsObject.h"
+#include "FontData.h"
 
 /// @brief
 namespace CMPUT350 {
-#include "FontData.h"
 // Creates the game window capped at 30 frames per second, loads
 // the font embedded in FontData.h, and builds the DrawContext and
 // GameContext.
@@ -71,17 +73,48 @@ void GameEngine::Run() {
         ProcessEvents(&mContext);
 
         // 3. Update game objects
+        for (auto& obj : mGameObjects) {
+            obj->Update(&mContext);
+        }
 
         // 4. Process collision events
+        for (size_t i = 0; i < mGameObjects.size(); i++) {
+            auto objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);
+            if (objA == nullptr) continue;
+
+            for (size_t j = i + 1; j < mGameObjects.size(); j++) {
+                auto objB = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[j]);
+                if (objB == nullptr) continue;
+
+                Rect overlap = objA->GetBounds();
+                overlap &= objB->GetBounds();
+                if (overlap.width > 0 && overlap.height > 0) {
+                    objA->CollisionEnter(objB);
+                    objB->CollisionEnter(objA);
+                }
+            }
+        }
 
         // 5. Late updates
+        for (auto& obj : mGameObjects) {
+            obj->LateUpdate(&mContext);
+        }
 
         // Clear window
         mWindow->clear();
 
         // 6. Render background
+        for (auto& obj : mGameObjects) {
+            auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
+            if (graphicsObj != nullptr) graphicsObj->RenderBackground(&mContext);
+        }
 
         // 7. Render foreground
+        for (auto& obj : mGameObjects) {
+            auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
+            if (graphicsObj != nullptr) graphicsObj->RenderForeground(&mContext);
+
+        }
 
         // Actually render to window
         mWindow->display();
