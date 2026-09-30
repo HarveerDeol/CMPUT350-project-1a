@@ -13,12 +13,18 @@ else ()
     set(SFML_USE_SYSTEM_DEPS OFF)
     FetchContent_MakeAvailable(SFML)
 
-    # SFML's bundled FreeType calls into HarfBuzz but leaves that dependency
-    # undeclared. Declare it so CMake repeats the libraries on the link line.
-    # AI-generated (Claude). Prompt: "The build fails at the link step with
-    # dozens of 'undefined reference to hb_*' errors from libfreetyped.a as
-    # soon as GameEngine calls sf::Font::openFromMemory. How do I fix this?"
-
+    # AI generated fix:
+    # "My CMake build fails with this issue, how do I fix this?
+    #
+    #    [100%] Linking CXX executable Project1.exe
+    #    ld.exe: _deps/sfml-build/lib/libfreetyped.a(unity_0_c.c.obj):
+    #    in function `ft_hb_ft_reference_table':
+    #    ft-hb-ft.c:67: undefined reference to `hb_blob_create'
+    #    ft-hb-ft.c:86: undefined reference to `hb_face_create'
+    #    ft-hb-ft.c:87: undefined reference to `hb_blob_destroy'
+    #    ft-hb-ft.c:89: undefined reference to `hb_face_create_for_tables'
+    #    ... (dozens more hb_* symbols)
+    #    collect2.exe: error: ld returned 1 exit status"
     # Reflection: Successfully fixes the build errors in a simple way.
     # Ensures the font libraries are linked properly.
     if (TARGET freetype AND TARGET harfbuzz)
