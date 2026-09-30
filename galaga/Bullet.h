@@ -34,7 +34,7 @@ public:
 
 private:
     static constexpr float kSpeed = 600.0f; // pixels per second, tuned by feel later
-
+    static constexpr float kHalfWidth = 2.0f; // half the width of the bullet's bounding box
     CMPUT350::Point2D mLocation;
     CMPUT350::Point2D mPrevLocation;
     CMPUT350::Point2D mHeading; // normalized direction of travel

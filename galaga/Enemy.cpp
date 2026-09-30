@@ -3,7 +3,6 @@
 
 Enemy::Enemy(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
 {
-    // TODO: Update code
 }
 
 void Enemy::Initialize(CMPUT350::GameContext* context)

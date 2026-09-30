@@ -3,15 +3,21 @@
 #include "GraphicsObject.h"
 #include "FontData.h"
 
-/// @brief
+
 namespace CMPUT350 {
-// Creates the game window capped at 30 frames per second, loads
-// the font embedded in FontData.h, and builds the DrawContext and
-// GameContext.
+/**
+ * @brief Creates the game window and loads the resources shared by all drawing.
+ * @param width Window width in pixels (unsigned int).
+ * @param height Window height in pixels (unsigned int).
+ * @param name Text shown in the window's title bar (const std::string&).
+ */
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name)),
       mFont(std::make_shared<sf::Font>()),
       mDrawContext(mWindow, mFont) {
+    // Creates the game window capped at 30 frames per second, loads
+    // the font embedded in FontData.h, and builds the DrawContext and
+    // GameContext.
 
     // set framerate
     mWindow->setFramerateLimit(30);
@@ -28,21 +34,29 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 
 }
 
+/// @brief Closes the window as a failsafe, in case the engine is destroyed while it is still open. @return Nothing (void).
 GameEngine::~GameEngine() {
     // Cleanup resources
     mWindow->close();
 }
 
+/**
+ * @brief Queues an object to join the game at the start of the next frame.
+ * @param gameObject The object to add (std::shared_ptr<GameObject>); the engine takes shared ownership.
+ * @return Nothing (void).
+ */
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
     // add to pending objects to be added at the start of the next frame
     mPendingObjects.push_back(gameObject);
 }
 
 /**
- * @method Run
- * @arguments None
- * @description Gives control to the game engine. Will not return until the game window is closed or
- * all objects have been destroyed.
+ * @brief Runs the game loop until the window closes.
+ * @return Nothing (void).
+ *
+ * Each frame removes dead objects, admits objects queued last frame and
+ * initializes them, processes input, updates every object, dispatches
+ * collisions, runs late updates, then draws background and foreground.
  */
 void GameEngine::Run() {
     while (mWindow->isOpen())  // window is open
@@ -121,6 +135,11 @@ void GameEngine::Run() {
     }
 }
 
+/**
+ * @brief Drains this frame's SFML event queue.
+ * @param context The context passed to any object receiving a key event (GameContext*).
+ * @return True if the window is still open after processing (bool).
+ */
 bool GameEngine::ProcessEvents(GameContext *context)
 {
 	while (const std::optional event = mWindow->pollEvent())
