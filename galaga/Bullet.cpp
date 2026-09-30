@@ -28,7 +28,7 @@ void Bullet::Update(CMPUT350::GameContext* context)
     mLocation += mHeading * (kSpeed / 30.0f);
 
     mBounds = CMPUT350::Rect(mPrevLocation, mLocation);
-
+    mBounds.Inset(-kHalfWidth);
     // kill bullets once they've left the screen so they don't accumulate forever.
     float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
     float screenHeight = static_cast<float>(context->ScreenContext->GetWindowHeight());
