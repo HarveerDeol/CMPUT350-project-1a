@@ -73,13 +73,13 @@ struct Point2D {
     bool operator==(const Point2D &other) const {
         return x == other.x && y == other.y;
     }
-    Point2D &operator*=(const int &scalar) {
+    Point2D &operator*=(const float &scalar) {
         // multiply by scalar in place
         x *= scalar;
         y *= scalar;
         return *this;
     }
-    Point2D &operator/=(const int &scalar) {
+    Point2D &operator/=(const float &scalar) {
         // divide by scalar in place
         x /= scalar;
         y /= scalar;
@@ -267,7 +267,7 @@ struct Rect {
         r += other;
         return r;
     }
-    void Inset(int inset) {
+    void Inset(float inset) {
         topLeft.x += inset;
         topLeft.y += inset;
         width  -= 2 * inset;
