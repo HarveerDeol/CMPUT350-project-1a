@@ -32,9 +32,21 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     {
         dx = moveSpeed;
     }
-    else if (key == ' ')
+        else if (key == ' ')
     {
-        // #18: fire a bullet upward
+        // Find an open bullet slot means the weak_ptr is expired or it was unassigned 
+        for (auto& slot : mBullets)
+        {
+            if (slot.expired())
+            {
+                auto bullet = std::make_shared<Bullet>(
+                    mLocation, CMPUT350::Point2D(0.0f, -1.0f), true); // heading straight up, player = true
+                bullet->SetShooter(shared_from_this());
+                context->mEngineView->AddGameObject(bullet);
+                slot = bullet; // weak_ptr now tracks this bullet's lifetime
+                break; // only fire one bullet per press, even if both slots are open
+            }
+        }
         return true;
     }
     else
