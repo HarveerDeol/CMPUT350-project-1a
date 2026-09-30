@@ -55,7 +55,42 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::magenta);
+    CMPUT350::DrawContext* screen = context->ScreenContext;
+    float x = mLocation.x;
+    float y = mLocation.y;
+    
+    // collision box for debugging
+    //screen->FrameRect(mBounds, 1.0f, CMPUT350::Colors::yellow);
+
+    // main body
+    screen->DrawRect(CMPUT350::Rect(x - 6.0f, y - 15.0f, 12.0f, 35.0f), CMPUT350::Colors::white);
+    
+    // tip
+    screen->DrawRect(CMPUT350::Rect(x - 2.5f, y - 20.0f, 5.0f, 5.0f), CMPUT350::Colors::cyan);
+
+    // inner colored wings
+    screen->DrawRect(CMPUT350::Rect(x - 11.0f, y - 5.0f, 5.0f, 25.0f), CMPUT350::Colors::cyan);
+    screen->DrawRect(CMPUT350::Rect(x + 6.0f, y - 5.0f, 5.0f, 25.0f), CMPUT350::Colors::cyan);
+
+    // outer wings
+    screen->DrawRect(CMPUT350::Rect(x - 16.0f, y - 1.0f, 5.0f, 18.0f), CMPUT350::Colors::grey);
+    screen->DrawRect(CMPUT350::Rect(x + 11.0f, y - 1.0f, 5.0f, 18.0f), CMPUT350::Colors::grey);
+
+    // front/forward cyan tips
+    screen->DrawRect(CMPUT350::Rect(x - 20.0f, y - 18.0f, 4.0f, 9.0f), CMPUT350::Colors::cyan);
+    screen->DrawRect(CMPUT350::Rect(x + 16.0f, y - 18.0f, 4.0f, 9.0f), CMPUT350::Colors::cyan);
+
+    // white front crossbars connecting the tips
+    screen->DrawRect(CMPUT350::Rect(x - 20.0f, y - 13.0f, 14.0f, 4.0f), CMPUT350::Colors::white);
+    screen->DrawRect(CMPUT350::Rect(x + 6.0f, y - 13.0f, 14.0f, 4.0f), CMPUT350::Colors::white);
+
+    // outer lower wingtips
+    screen->DrawRect(CMPUT350::Rect(x - 20.0f, y + 8.0f, 4.0f, 9.0f), CMPUT350::Colors::white);
+    screen->DrawRect(CMPUT350::Rect(x + 16.0f, y + 8.0f, 4.0f, 9.0f), CMPUT350::Colors::white);
+
+    // red fuel light things on the back
+    screen->DrawRect(CMPUT350::Rect(x - 19.25f, y + 17.0f, 2.0f, 1.0f), CMPUT350::Colors::red);
+    screen->DrawRect(CMPUT350::Rect(x + 17.25f, y + 17.0f, 2.0f, 1.0f), CMPUT350::Colors::red);
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
