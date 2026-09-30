@@ -3,7 +3,7 @@
 #include "GraphicsObject.h"
 #include "FontData.h"
 
-/// @brief
+
 namespace CMPUT350 {
 /**
  * @brief Creates the game window and loads the resources shared by all drawing.

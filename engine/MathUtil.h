@@ -268,6 +268,7 @@ struct Rect {
     Point2D topLeft;
     float width, height;
 
+    /// @brief Builds a rect from its edges. @param left Left edge (float). @param top Top edge (float). @param width Width in pixels (float). @param height Height in pixels (float).
     Rect(float left, float top, float width, float height)
         : topLeft(Point2D(left, top)), width(width), height(height) {}
 
@@ -282,6 +283,7 @@ struct Rect {
     Rect(Point2D center, float radius)
         : topLeft(center.x - radius, center.y - radius), width(2 * radius), height(2 * radius) {}
 
+    /// @brief Grows this rect to the smallest one containing both. @param other Rect to include (Rect). @return Reference to this rect (Rect&).
     Rect &operator|=(const Rect &other) {
         float left   = std::min(topLeft.x, other.topLeft.x);
         float top    = std::min(topLeft.y, other.topLeft.y);
@@ -292,6 +294,7 @@ struct Rect {
         height = bottom - top;
         return *this;
     }
+    /// @brief Grows this rect to include a point. @param other Point to include (Point2D). @return Reference to this rect (Rect&).
     Rect &operator|=(const Point2D &other) {
         float left   = std::min(topLeft.x, other.x);
         float top    = std::min(topLeft.y, other.y);
@@ -302,11 +305,13 @@ struct Rect {
         height = bottom - top;
         return *this;
     }
+    /// @brief Grows this rect to include both endpoints of a line. @param other Line to include (Line). @return Reference to this rect (Rect&).
     Rect &operator|=(const Line &other) {
         *this |= other.p1;
         *this |= other.p2;
         return *this;
     }
+    /// @brief Shrinks this rect to its overlap with another. Non-overlapping rects yield a negative width and/or height, which marks an empty result. @param other Rect to intersect with (Rect). @return Reference to this rect (Rect&).
     Rect &operator&=(const Rect &other) {
         float left   = std::max(topLeft.x, other.topLeft.x);
         float top    = std::max(topLeft.y, other.topLeft.y);
@@ -317,21 +322,25 @@ struct Rect {
         height = bottom - top;
         return *this;
     }
+    /// @brief Translates this rect in place, leaving its size unchanged. @param other Offset to apply (Point2D). @return Reference to this rect (Rect&).
     Rect &operator+=(const Point2D &other) {
         topLeft += other;
         return *this;
     }
+    /// @brief Returns a copy translated by an offset. @param other Offset to apply (Point2D). @return A new rect (Rect); this one is unchanged.
     Rect operator+(const Point2D &other) const {
         Rect r = *this;
         r += other;
         return r;
     }
+    /// @brief Shrinks the rect by the same amount on all four sides; a negative value grows it instead. @param inset Pixels to shrink each side by (float). @return Nothing (void).
     void Inset(float inset) {
         topLeft.x += inset;
         topLeft.y += inset;
         width  -= 2 * inset;
         height -= 2 * inset;
     }
+    /// @brief Tests whether a point lies within the rect, counting its edges as inside. @param p Point to test (Point2D). @return True if the point is inside or on the border (bool).
     bool IsInside(const Point2D &p) const {
         return p.x >= topLeft.x && p.x <= topLeft.x + width &&
             p.y >= topLeft.y && p.y <= topLeft.y + height;
