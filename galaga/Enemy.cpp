@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 
-Enemy::Enemy(CMPUT350::Point2D loc)
+Enemy::Enemy(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
 {
     // TODO: Update code
 }
@@ -20,6 +20,7 @@ void Enemy::LateUpdate(CMPUT350::GameContext* context)
 
 bool Enemy::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
+    return false;
 }
 
 void Enemy::RenderBackground(CMPUT350::GameContext* context)
@@ -28,25 +29,29 @@ void Enemy::RenderBackground(CMPUT350::GameContext* context)
 
 void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
+    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::yellow);
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
+    std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(obj);
+    if (bullet != nullptr && bullet->IsPlayerBullet())
+    {
+        Kill();
+    }
 }
 
 void Enemy::Kill()
 {
+    mAlive = false;
 }
 
 bool Enemy::IsAlive() const
 {
-    // TODO: Update code
-    return true;
+    return mAlive;
 }
 
 const CMPUT350::Rect& Enemy::GetBounds()
 {
-    // TODO: Update code
-    static CMPUT350::Rect sBounds(0, 0, 0, 0);
-    return sBounds;
+    return mBounds;
 }

@@ -3,7 +3,6 @@
 #include "Bullet.h"
 #include <algorithm>
 
-
 Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
 {
 }
