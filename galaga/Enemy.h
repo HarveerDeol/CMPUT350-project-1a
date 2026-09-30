@@ -6,6 +6,10 @@
 
 class Enemy : public CMPUT350::CollisionObject
 {
+private:
+    CMPUT350::Point2D mLocation;
+    CMPUT350::Rect mBounds;       
+    bool mAlive;
 public:
     Enemy(CMPUT350::Point2D loc);
 

@@ -110,10 +110,12 @@ private:
 // would be in a C++ file
 std::random_device Ball::rd;
 std::mt19937 Ball::gen(rd());
+const int WINDOW_WIDTH = 768;
+const int WINDOW_HEIGHT = 1024;
 
 int main()
 {
-    bool mBallSsample = true;
+    bool mBallSsample = false;
 
     if (mBallSsample)
     {
@@ -124,7 +126,7 @@ int main()
     }
     else
     {
-        CMPUT350::GameEngine engine(768, 1024, "Galaga");
+        CMPUT350::GameEngine engine(WINDOW_WIDTH, WINDOW_HEIGHT, "Galaga");
         auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));

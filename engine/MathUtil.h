@@ -210,7 +210,7 @@ struct Rect {
     float width, height;
 
     Rect(float left, float top, float width, float height)
-        : topLeft(Point2D(top, left)), width(width), height(height) {}
+        : topLeft(Point2D(left, top)), width(width), height(height) {}
 
     Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
 
@@ -265,7 +265,7 @@ struct Rect {
     Rect operator+(const Point2D &other) const {
         Rect r = *this;
         r += other;
-        return *this;
+        return r;
     }
     void Inset(int inset) {
         topLeft.x += inset;
@@ -280,7 +280,7 @@ struct Rect {
 };
 
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
-    // TODO: write this code
+    os << "[" << l.topLeft << " " << l.width << "x" << l.height << "]";
     return os;
 }
 
