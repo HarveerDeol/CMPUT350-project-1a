@@ -3,22 +3,47 @@
 #include "Bullet.h"
 #include <algorithm>
 
+/**
+ * @brief Constructs the player ship centered at the given location.
+ * @param loc Center point of the player (CMPUT350::Point2D).
+ */
 Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
 {
 }
 
+/**
+ * @brief No setup required; the constructor fully initializes the player.
+ * @param context Unused (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Player::Initialize(CMPUT350::GameContext* context)
 {
 }
 
+/**
+ * @brief The player has no per-frame logic outside of key-driven movement/firing.
+ * @param context Unused (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Player::Update(CMPUT350::GameContext* context)
 {
 }
 
+/**
+ * @brief No late-update behaviour needed for the player.
+ * @param context Unused (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
 }
 
+/**
+ * @brief Handles player input: A/D to move horizontally, space to fire.
+ * @param context Provides screen width for clamping and engine access for firing (CMPUT350::GameContext*).
+ * @param key The ASCII key that was pressed (char).
+ * @return True if the key was handled, false otherwise (bool).
+ */
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     const float moveSpeed = 10.0f;
@@ -61,10 +86,20 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     return true;
 }
 
+/**
+ * @brief The player has nothing to draw behind other objects.
+ * @param context Unused (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Player::RenderBackground(CMPUT350::GameContext* context)
 {
 }
 
+/**
+ * @brief Draws the player as a small ship built from layered rectangles.
+ * @param context Provides the draw context used to render (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::DrawContext* screen = context->ScreenContext;
@@ -105,6 +140,11 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     screen->DrawRect(CMPUT350::Rect(x + 17.25f, y + 17.0f, 2.0f, 1.0f), CMPUT350::Colors::red);
 }
 
+/**
+ * @brief Handles a collision with another collision object.
+ * @param obj The object the player collided with (std::shared_ptr<CMPUT350::CollisionObject>).
+ * @return Nothing (void).
+ */
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
         std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(obj);
@@ -114,16 +154,28 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     }
 }
 
+/**
+ * @brief Marks the player as dead so the engine removes it next frame.
+ * @return Nothing (void).
+ */
 void Player::Kill()
 {
     mAlive = false;
 }
 
+/**
+ * @brief Reports whether the player is still active.
+ * @return True if alive, false if it should be removed by the engine (bool).
+ */
 bool Player::IsAlive() const
 {
     return mAlive;
 }
 
+/**
+ * @brief Returns the player's bounding box, used for collision checks.
+ * @return Reference to the player's bounds, centered at its current location (const CMPUT350::Rect&).
+ */
 const CMPUT350::Rect& Player::GetBounds()
 {
     return mBounds;
