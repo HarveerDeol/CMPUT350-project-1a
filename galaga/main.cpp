@@ -4,9 +4,16 @@
 #include "Enemy.h"
 #include "Stars.h"
 
+/**
+ * @brief A bouncing ball used as an engine-only integration test (not part of Galaga).
+ */
 class Ball : public CMPUT350::CollisionObject
 {
 public:
+    /**
+     * @brief Constructs a ball with a random position and random initial velocity.
+     * @param radius Radius of the ball in pixels (int); larger balls act as heavier objects in collisions.
+     */
     Ball(int radius) : CollisionObject(), mRadius(radius), mNumCollisions(0), mLoc(radius, radius), mSpeed(3, 3),
                        mSpeedNext(3, 3), mFrameCollisions(0)
     {
@@ -21,6 +28,11 @@ public:
         mSpeed.y = speed(gen); // Random speed between 1 and 5
     }
 
+    /**
+     * @brief Moves the ball, bounces it off screen edges, and occasionally spawns a new ball.
+     * @param context Provides engine access, used here to add newly spawned balls (CMPUT350::GameContext*).
+     * @return Nothing (void).
+     */
     void Update(CMPUT350::GameContext* context) override
     {
         // Update ball position or state
@@ -47,6 +59,11 @@ public:
         mSpeedNext = mSpeed;
     }
 
+    /**
+     * @brief Finalizes this frame's collision count after all collisions have been processed.
+     * @param context Unused (CMPUT350::GameContext*).
+     * @return Nothing (void).
+     */
     void LateUpdate(CMPUT350::GameContext* context) override
     {
         if (mFrameCollisions > 0)
@@ -54,6 +71,11 @@ public:
         mFrameCollisions = 0;
     }
 
+    /**
+     * @brief Applies an elastic-collision response when this ball overlaps another ball.
+     * @param obj The object this ball collided with (std::shared_ptr<CollisionObject>).
+     * @return Nothing (void).
+     */
     void CollisionEnter(const std::shared_ptr<CollisionObject>& obj) override
     {
         std::shared_ptr<Ball> ball = std::dynamic_pointer_cast<Ball>(obj);
@@ -77,6 +99,10 @@ public:
         }
     }
 
+    /**
+     * @brief Returns the ball's current bounding box, used for collision checks.
+     * @return Reference to a box centered at mLoc with side length 2*mRadius (const CMPUT350::Rect&).
+     */
     const CMPUT350::Rect& GetBounds() override
     {
         static CMPUT350::Rect bounds({0, 0}, 0, 0); // Initialize with dummy values
@@ -84,11 +110,20 @@ public:
         return bounds;
     }
 
+    /**
+     * @brief Reports whether the ball should remain in the game.
+     * @return True while the ball has fewer than 10 recorded collisions, false otherwise (bool).
+     */
     bool IsAlive() const override
     {
         return mNumCollisions < 10;
     }
 
+    /**
+     * @brief Draws the ball as a red circle, its collision count, and a debug line to its last collision point.
+     * @param context Provides the draw context used to render (CMPUT350::GameContext*).
+     * @return Nothing (void).
+     */
     void RenderForeground(CMPUT350::GameContext* context) override
     {
         context->ScreenContext->DrawCircle(mLoc, mRadius, CMPUT350::Colors::red);
@@ -113,6 +148,10 @@ std::mt19937 Ball::gen(rd());
 const float WINDOW_WIDTH = 768.0f;
 const float WINDOW_HEIGHT = 1024.0f;
 
+/**
+ * @brief Entry point. Builds either the bouncing-ball engine demo or the Galaga game, then runs it.
+ * @return 0 on normal exit (int).
+ */
 int main()
 {
     bool mBallSsample = false;
