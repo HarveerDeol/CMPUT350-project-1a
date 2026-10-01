@@ -2,6 +2,11 @@
 #include "DrawContext.h"
 #include "Stars.h"
 
+/**
+ * @brief Constructs a starfield of randomly placed stars within a bounding region.
+ * @param numStars Number of stars to generate (int).
+ * @param bounds Rectangular region the stars are scattered within and scroll inside of (CMPUT350::Rect).
+ */
 Stars::Stars(int numStars, CMPUT350::Rect bounds)
     : mBounds(bounds), gen(rd())
 {
@@ -14,6 +19,11 @@ Stars::Stars(int numStars, CMPUT350::Rect bounds)
     }
 }
 
+/**
+ * @brief Draws a scrolling, twinkling starfield behind the rest of the scene.
+ * @param context Provides the draw context used to render (CMPUT350::GameContext*).
+ * @return Nothing (void).
+ */
 void Stars::RenderBackground(CMPUT350::GameContext* context)
 {
     CMPUT350::RGBColor c[4] = {
