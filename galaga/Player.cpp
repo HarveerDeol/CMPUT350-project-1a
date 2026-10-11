@@ -180,3 +180,6 @@ const CMPUT350::Rect& Player::GetBounds()
 {
     return mBounds;
 }
+
+CMPUT350::Point2D Player::GetLocation() const { return mLocation; }
+float Player::GetRotation() const { return 0.0f; }

@@ -106,3 +106,6 @@ const CMPUT350::Rect& Enemy::GetBounds()
 {
     return mBounds;
 }
+
+CMPUT350::Point2D Enemy::GetLocation() const { return mLocation; }
+float Enemy::GetRotation() const { return 0.0f; }
