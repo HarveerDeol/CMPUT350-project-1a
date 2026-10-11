@@ -260,9 +260,13 @@ struct Circle {
     float radius;
 
     Circle(Point2D c = {0, 0}, float r = 0) : center(c), radius(r) {}
-
     Circle(float x, float y, float r) : center(x, y), radius(r) {}
 };
+static std::ostream &operator<<(std::ostream &os, const Circle &c) {
+    os << "(" << c.center << ", r = " << c.radius << ")";
+    return os;
+}
+
 
 struct Rect {
     Point2D topLeft;
@@ -347,9 +351,9 @@ struct Rect {
     }
 };
 
-/// @brief Writes a rect as "[(x, y) WxH]". @param os Target stream (std::ostream&). @param l Rect to write (Rect). @return The same stream, for chaining (std::ostream&).
+/// @brief Writes a rect as "[(x, y), WxH]". @param os Target stream (std::ostream&). @param l Rect to write (Rect). @return The same stream, for chaining (std::ostream&).
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
-    os << "[" << l.topLeft << " " << l.width << "x" << l.height << "]";
+    os << "[" << l.topLeft << ", " << l.width << "x" << l.height << "]";
     return os;
 }
 
