@@ -32,6 +32,9 @@ public:
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
 
+    CMPUT350::Point2D GetLocation() const override;
+    float GetRotation() const override;
+
 private:
     static constexpr float kSpeed = 600.0f; // pixels per second, tuned by feel later
     static constexpr float kHalfWidth = 2.0f; // half the width of the bullet's bounding box

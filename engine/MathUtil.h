@@ -216,7 +216,7 @@ struct Line {
      * @return True only if the segments genuinely overlap (bool). Parallel,
      *         zero-length, and near-miss segments all return false.
      */
-    bool Crosses(Line other, Point2D &crossingPoint) const {
+    bool Crosses(const Line &other, Point2D &crossingPoint) const {
         // calculates where two lines cross, if they do, and returns the crossing point in crossingPoint
         Point2D a = p1; // point a
         Point2D b = p2; // point b
@@ -249,6 +249,7 @@ struct Line {
     }
 };
 
+/// @brief Writes a line as its two endpoints. @param os Target stream (std::ostream&). @param l Line to write (Line). @return The same stream, for chaining (std::ostream&).
 static std::ostream &operator<<(std::ostream &os, const Line &l) {
     // prints points (p1, p2)
     os << "(" << l.p1 << ", " << l.p2 << ")";
@@ -260,9 +261,15 @@ struct Circle {
     float radius;
 
     Circle(Point2D c = {0, 0}, float r = 0) : center(c), radius(r) {}
-
     Circle(float x, float y, float r) : center(x, y), radius(r) {}
 };
+
+/// @brief Writes a circle as "(center, r = radius)". @param os Target stream (std::ostream&). @param c Circle to write (Circle). @return The same stream, for chaining (std::ostream&).
+static std::ostream &operator<<(std::ostream &os, const Circle &c) {
+    os << "(" << c.center << ", r = " << c.radius << ")";
+    return os;
+}
+
 
 struct Rect {
     Point2D topLeft;
@@ -347,9 +354,9 @@ struct Rect {
     }
 };
 
-/// @brief Writes a rect as "[(x, y) WxH]". @param os Target stream (std::ostream&). @param l Rect to write (Rect). @return The same stream, for chaining (std::ostream&).
+/// @brief Writes a rect as "[(x, y), WxH]". @param os Target stream (std::ostream&). @param l Rect to write (Rect). @return The same stream, for chaining (std::ostream&).
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
-    os << "[" << l.topLeft << " " << l.width << "x" << l.height << "]";
+    os << "[" << l.topLeft << ", " << l.width << "x" << l.height << "]";
     return os;
 }
 
