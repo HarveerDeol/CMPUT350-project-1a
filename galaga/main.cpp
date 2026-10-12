@@ -26,6 +26,7 @@ public:
         mLoc.y = yRand(gen);
         mSpeed.x = speed(gen); // Random speed between 1 and 5
         mSpeed.y = speed(gen); // Random speed between 1 and 5
+        mShapes.push_back(CMPUT350::Circle(CMPUT350::Point2D(0, 0), static_cast<float>(mRadius)));
     }
 
     /**
@@ -132,9 +133,15 @@ public:
         context->ScreenContext->DrawLine(mLoc, mLoc + mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
     }
 
+    /// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).
     CMPUT350::Point2D GetLocation() const override { return mLoc; }
+    /// @brief Returns the object's rotation. @return The rotation in radians, always 0 for this object (float).
     float GetRotation() const override { return 0.0f; }
+    /// @brief Returns the collision shapes making up this object, in local coordinates relative to GetLocation. @return The shapes used for collision (const std::vector<CMPUT350::Shape>&).
+    const std::vector<CMPUT350::Shape>& GetShapes() override { return mShapes; }
+
 private:
+    std::vector<CMPUT350::Shape> mShapes;
     static std::random_device rd;
     static std::mt19937 gen;
 
