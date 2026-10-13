@@ -16,6 +16,7 @@ class GameEngine;
 namespace CMPUT350 {
 
 class DrawContext;
+struct Shape;
 
 class GameEngine : public EngineView {
 public:
@@ -33,6 +34,8 @@ public:
 
 private:
     bool ProcessEvents(GameContext* context);
+    void ProcessCollisions();
+    Shape TransformShape(const Shape& shape);
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;

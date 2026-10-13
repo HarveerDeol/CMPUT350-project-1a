@@ -7,7 +7,7 @@
  * @brief Constructs the player ship centered at the given location.
  * @param loc Center point of the player (CMPUT350::Point2D).
  */
-Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
+Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(CMPUT350::Point2D(0, 0), 20.0f), mAlive(true)
 
 {
     mShapes.push_back(CMPUT350::Rect(-20.0f, -20.0f, 40.0f, 40.0f));
@@ -84,7 +84,6 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     mLocation.x += dx;
     float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
     mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
-    mBounds = CMPUT350::Rect(mLocation, 20.0f);
     return true;
 }
 

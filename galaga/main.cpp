@@ -107,7 +107,7 @@ public:
     const CMPUT350::Rect& GetBounds() override
     {
         static CMPUT350::Rect bounds({0, 0}, 0, 0); // Initialize with dummy values
-        bounds = CMPUT350::Rect(mLoc - mRadius, 2 * mRadius, 2 * mRadius);
+        bounds = CMPUT350::Rect(CMPUT350::Point2D(-mRadius, -mRadius), 2 * mRadius, 2 * mRadius);
         return bounds;
     }
 
@@ -163,7 +163,7 @@ const float WINDOW_HEIGHT = 1024.0f;
  */
 int main()
 {
-    bool mBallSsample = false;
+    bool mBallSsample = true;
 
     if (mBallSsample)
     {

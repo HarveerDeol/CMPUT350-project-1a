@@ -10,7 +10,7 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
     : mLocation(location), mPrevLocation(location), mHeading(heading), mIsPlayerBullet(player)
 {
     mHeading.Normalize(); // ensure movement speed is consistent regardless of the input vector's length
-    mBounds = CMPUT350::Rect(mPrevLocation, mLocation); // zero-size box at spawn until first Update
+    mBounds = CMPUT350::Rect(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0)); // zero-size box at spawn until first Update
 }
 
 /**
@@ -52,7 +52,7 @@ void Bullet::Update(CMPUT350::GameContext* context)
     mPrevLocation = mLocation;
     mLocation += mHeading * (kSpeed / 30.0f);
 
-    mBounds = CMPUT350::Rect(mPrevLocation, mLocation);
+    mBounds = CMPUT350::Rect(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0));
     mBounds.Inset(-kHalfWidth);
     mShapes.clear();
     mShapes.push_back(CMPUT350::Line(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0)));
