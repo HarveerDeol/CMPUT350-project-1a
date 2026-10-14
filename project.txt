@@ -1,0 +1,6 @@
+
+AI Usage Documentation:
+Prompt: "Walk me through the pseudocode for ProcessCollisions"
+"Can you show me what to put inside the overlap width/height check?"
+Reflection: Useful for the order of operations rather than the math. It also caught that our bounds were still
+in world coordinates while the shapes were local, which was inconsistent so we changed it.
