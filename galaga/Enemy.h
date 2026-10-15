@@ -10,6 +10,7 @@ private:
     CMPUT350::Point2D mLocation;
     CMPUT350::Rect mBounds;       
     bool mAlive;
+    std::vector<CMPUT350::Shape> mShapes;
 public:
     Enemy(CMPUT350::Point2D loc);
 
@@ -28,6 +29,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     CMPUT350::Point2D GetLocation() const override;
     float GetRotation() const override;

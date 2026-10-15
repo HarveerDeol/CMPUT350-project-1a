@@ -10,7 +10,7 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
     : mLocation(location), mPrevLocation(location), mHeading(heading), mIsPlayerBullet(player)
 {
     mHeading.Normalize(); // ensure movement speed is consistent regardless of the input vector's length
-    mBounds = CMPUT350::Rect(mPrevLocation, mLocation); // zero-size box at spawn until first Update
+    mBounds = CMPUT350::Rect(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0)); // zero-size box at spawn until first Update
 }
 
 /**
@@ -52,8 +52,10 @@ void Bullet::Update(CMPUT350::GameContext* context)
     mPrevLocation = mLocation;
     mLocation += mHeading * (kSpeed / 30.0f);
 
-    mBounds = CMPUT350::Rect(mPrevLocation, mLocation);
+    mBounds = CMPUT350::Rect(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0));
     mBounds.Inset(-kHalfWidth);
+    mShapes.clear();
+    mShapes.push_back(CMPUT350::Line(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0)));
     // kill bullets once they've left the screen so they don't accumulate forever.
     float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
     float screenHeight = static_cast<float>(context->ScreenContext->GetWindowHeight());
@@ -91,7 +93,7 @@ void Bullet::RenderBackground(CMPUT350::GameContext* context)
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::RGBColor color = mIsPlayerBullet ? CMPUT350::Colors::cyan : CMPUT350::Colors::red;
-    context->ScreenContext->DrawLine(mPrevLocation, mLocation, 2.0f, color);
+    context->ScreenContext->DrawLine(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0), 2.0f, color);
 }
 
 /**
@@ -138,5 +140,10 @@ const CMPUT350::Rect& Bullet::GetBounds()
     return mBounds;
 }
 
+/// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).
 CMPUT350::Point2D Bullet::GetLocation() const { return mLocation; }
+/// @brief Returns the object's rotation. @return The rotation in radians, always 0 for this object (float).
 float Bullet::GetRotation() const { return 0.0f; }
+
+/// @brief Returns the collision shapes making up this bullet, in local coordinates relative to GetLocation. The line spanning the previous and current positions is rebuilt each frame in Update. @return The shapes used for collision (const std::vector<CMPUT350::Shape>&).
+const std::vector<CMPUT350::Shape>& Bullet::GetShapes() { return mShapes; }

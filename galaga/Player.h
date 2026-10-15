@@ -14,6 +14,7 @@ private:
     CMPUT350::Rect mBounds;
     bool mAlive;
     CMPUT350::GameContext* mContext = nullptr;
+    std::vector<CMPUT350::Shape> mShapes;
 
     std::weak_ptr<Bullet> mBullets[2]; // tracks the player's two bullet slots
 
@@ -35,6 +36,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     CMPUT350::Point2D GetLocation() const override;
     float GetRotation() const override;

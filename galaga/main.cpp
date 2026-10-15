@@ -26,6 +26,7 @@ public:
         mLoc.y = yRand(gen);
         mSpeed.x = speed(gen); // Random speed between 1 and 5
         mSpeed.y = speed(gen); // Random speed between 1 and 5
+        mShapes.push_back(CMPUT350::Circle(CMPUT350::Point2D(0, 0), static_cast<float>(mRadius)));
     }
 
     /**
@@ -106,7 +107,7 @@ public:
     const CMPUT350::Rect& GetBounds() override
     {
         static CMPUT350::Rect bounds({0, 0}, 0, 0); // Initialize with dummy values
-        bounds = CMPUT350::Rect(mLoc - mRadius, 2 * mRadius, 2 * mRadius);
+        bounds = CMPUT350::Rect(CMPUT350::Point2D(-mRadius, -mRadius), 2 * mRadius, 2 * mRadius);
         return bounds;
     }
 
@@ -126,15 +127,21 @@ public:
      */
     void RenderForeground(CMPUT350::GameContext* context) override
     {
-        context->ScreenContext->DrawCircle(mLoc, mRadius, CMPUT350::Colors::red);
-        context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, mLoc,
+        context->ScreenContext->DrawCircle(CMPUT350::Point2D(0, 0), mRadius, CMPUT350::Colors::red);
+        context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, CMPUT350::Point2D(0, 0),
                                                  CMPUT350::Colors::white);
-        context->ScreenContext->DrawLine(mLoc, mLoc + mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
+        context->ScreenContext->DrawLine(CMPUT350::Point2D(0, 0), mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
     }
 
+    /// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).
     CMPUT350::Point2D GetLocation() const override { return mLoc; }
+    /// @brief Returns the object's rotation. @return The rotation in radians, always 0 for this object (float).
     float GetRotation() const override { return 0.0f; }
+    /// @brief Returns the collision shapes making up this object, in local coordinates relative to GetLocation. @return The shapes used for collision (const std::vector<CMPUT350::Shape>&).
+    const std::vector<CMPUT350::Shape>& GetShapes() override { return mShapes; }
+
 private:
+    std::vector<CMPUT350::Shape> mShapes;
     static std::random_device rd;
     static std::mt19937 gen;
 

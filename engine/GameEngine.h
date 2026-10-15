@@ -17,6 +17,9 @@
 
 namespace CMPUT350 {
 
+class DrawContext;
+struct Shape;
+
 class GameEngine : public EngineView {
 public:
     GameEngine(unsigned int width, unsigned int height, const std::string& name);
@@ -40,16 +43,20 @@ public:
 
 private:
     bool ProcessEvents();
+    void ProcessCollisions();
+    Shape TransformShape(const Shape& shape);
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
     DrawContext mDrawContext;
+    DrawContext mGUIContext;
     GameContext mContext;
     NotificationManager mNotificationManager;
     std::unordered_map<int, std::string> mKeyDownNotifications;
     std::unordered_map<int, std::string> mKeyUpNotifications;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingObjects;
+    int mCurrentFrame = 0;
 };
 
 }  // namespace CMPUT350
