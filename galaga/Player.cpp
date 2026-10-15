@@ -7,8 +7,10 @@
  * @brief Constructs the player ship centered at the given location.
  * @param loc Center point of the player (CMPUT350::Point2D).
  */
-Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(loc, 20.0f), mAlive(true)
+Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(CMPUT350::Point2D(0, 0), 20.0f), mAlive(true)
+
 {
+    mShapes.push_back(CMPUT350::Rect(-20.0f, -20.0f, 40.0f, 40.0f));
 }
 
 /**
@@ -82,7 +84,6 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     mLocation.x += dx;
     float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
     mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
-    mBounds = CMPUT350::Rect(mLocation, 20.0f);
     return true;
 }
 
@@ -103,8 +104,8 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::DrawContext* screen = context->ScreenContext;
-    float x = mLocation.x;
-    float y = mLocation.y;
+    float x = 0.0f;
+    float y = 0.0f;
     
     // collision box for debugging
     //screen->FrameRect(mBounds, 1.0f, CMPUT350::Colors::yellow);
@@ -181,5 +182,18 @@ const CMPUT350::Rect& Player::GetBounds()
     return mBounds;
 }
 
-CMPUT350::Point2D Player::GetLocation() const { return mLocation; }
-float Player::GetRotation() const { return 0.0f; }
+/// @brief Returns the collision shapes making up this object, in local coordinates relative to GetLocation. @return The shapes used for collision (const std::vector<CMPUT350::Shape>&).
+const std::vector<CMPUT350::Shape> &Player::GetShapes() { 
+    return mShapes; 
+}
+
+/// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).
+CMPUT350::Point2D Player::GetLocation() const { 
+    return mLocation; 
+}
+
+/// @brief Returns the object's rotation. @return The rotation in radians, always 0 for this object (float).
+float Player::GetRotation() const { 
+    return 0.0f; 
+}
+
