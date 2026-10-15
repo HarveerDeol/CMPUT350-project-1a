@@ -104,8 +104,8 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::DrawContext* screen = context->ScreenContext;
-    float x = mLocation.x;
-    float y = mLocation.y;
+    float x = 0.0f;
+    float y = 0.0f;
     
     // collision box for debugging
     //screen->FrameRect(mBounds, 1.0f, CMPUT350::Colors::yellow);

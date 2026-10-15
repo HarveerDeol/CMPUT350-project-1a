@@ -136,6 +136,8 @@ void GameEngine::Run() {
             auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
             if (graphicsObj != nullptr) {
                 mContext.CurrObject = obj;
+                mDrawContext.SetContextOffset(graphicsObj->GetLocation());
+                mDrawContext.SetContextRotation(graphicsObj->GetRotation());
                 graphicsObj->RenderBackground(&mContext);
             }
         }
@@ -145,9 +147,21 @@ void GameEngine::Run() {
             auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
             if (graphicsObj != nullptr) {
                 mContext.CurrObject = obj;
+                mDrawContext.SetContextOffset(graphicsObj->GetLocation());
+                mDrawContext.SetContextRotation(graphicsObj->GetRotation());
                 graphicsObj->RenderForeground(&mContext);
             }
 
+        }
+
+        // reset draw context
+        mDrawContext.SetContextOffset(Point2D(0, 0));
+        mDrawContext.SetContextRotation(0.0f);
+
+        // 8. Render UI
+        for (auto& obj : mGameObjects) {
+            mContext.CurrObject = obj;
+            obj->RenderUI(&mContext);
         }
 
         // Actually render to window

@@ -127,10 +127,10 @@ public:
      */
     void RenderForeground(CMPUT350::GameContext* context) override
     {
-        context->ScreenContext->DrawCircle(mLoc, mRadius, CMPUT350::Colors::red);
-        context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, mLoc,
+        context->ScreenContext->DrawCircle(CMPUT350::Point2D(0, 0), mRadius, CMPUT350::Colors::red);
+        context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, CMPUT350::Point2D(0, 0),
                                                  CMPUT350::Colors::white);
-        context->ScreenContext->DrawLine(mLoc, mLoc + mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
+        context->ScreenContext->DrawLine(CMPUT350::Point2D(0, 0), mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
     }
 
     /// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).

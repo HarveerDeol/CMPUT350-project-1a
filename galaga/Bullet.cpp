@@ -103,7 +103,7 @@ void Bullet::RenderBackground(CMPUT350::GameContext* context)
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::RGBColor color = mIsPlayerBullet ? CMPUT350::Colors::cyan : CMPUT350::Colors::red;
-    context->ScreenContext->DrawLine(mPrevLocation, mLocation, 2.0f, color);
+    context->ScreenContext->DrawLine(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0), 2.0f, color);
 }
 
 /**

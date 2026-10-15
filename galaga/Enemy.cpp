@@ -64,7 +64,7 @@ void Enemy::RenderBackground(CMPUT350::GameContext* context)
  */
 void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawRect(CMPUT350::Rect(mLocation.x - 20.0f, mLocation.y - 20.0f, 40.0f, 40.0f), CMPUT350::Colors::yellow);
+    context->ScreenContext->DrawRect(CMPUT350::Rect(-20.0f, -20.0f, 40.0f, 40.0f), CMPUT350::Colors::yellow);
 }
 
 /**
