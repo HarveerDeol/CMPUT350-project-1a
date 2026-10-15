@@ -163,7 +163,7 @@ const float WINDOW_HEIGHT = 1024.0f;
  */
 int main()
 {
-    bool mBallSsample = true;
+    bool mBallSsample = false;
 
     if (mBallSsample)
     {

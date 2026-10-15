@@ -15,7 +15,8 @@ namespace CMPUT350 {
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name)),
       mFont(std::make_shared<sf::Font>()),
-      mDrawContext(mWindow, mFont) {
+      mDrawContext(mWindow, mFont),
+      mGUIContext(mWindow, mFont) {
     // Creates the game window capped at 30 frames per second, loads
     // the font embedded in FontData.h, and builds the DrawContext and
     // GameContext.
@@ -32,6 +33,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     // set up GameContext
     mContext.mEngineView = this;
     mContext.ScreenContext = &mDrawContext;
+    mContext.GUIContext = &mGUIContext;
 
 }
 
@@ -62,6 +64,8 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 void GameEngine::Run() {
     while (mWindow->isOpen())  // window is open
     {
+        mCurrentFrame++;
+        mContext.currentFrame = mCurrentFrame;
         // 0. Remove any objects that are now dead
         for (size_t i=0; i < mGameObjects.size();){
             if (mGameObjects[i]->IsAlive()){
@@ -77,6 +81,10 @@ void GameEngine::Run() {
 
         // 1. Activate and initialize any objects added during the last frame
         for (size_t i=0; i < mPendingObjects.size();){
+            // set curr object
+            mContext.CurrObject = mPendingObjects[i];
+            mPendingObjects[i]->Initialize(&mContext);
+
             mGameObjects.push_back(mPendingObjects[i]);
             mPendingObjects[i]->Initialize(&mContext);
             i++;
@@ -89,6 +97,7 @@ void GameEngine::Run() {
 
         // 3. Update game objects
         for (auto& obj : mGameObjects) {
+            mContext.CurrObject = obj;
             obj->Update(&mContext);
         }
 
@@ -115,6 +124,7 @@ void GameEngine::Run() {
 
         // 5. Late updates
         for (auto& obj : mGameObjects) {
+            mContext.CurrObject = obj;
             obj->LateUpdate(&mContext);
         }
 
@@ -124,13 +134,19 @@ void GameEngine::Run() {
         // 6. Render background
         for (auto& obj : mGameObjects) {
             auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
-            if (graphicsObj != nullptr) graphicsObj->RenderBackground(&mContext);
+            if (graphicsObj != nullptr) {
+                mContext.CurrObject = obj;
+                graphicsObj->RenderBackground(&mContext);
+            }
         }
 
         // 7. Render foreground
         for (auto& obj : mGameObjects) {
             auto graphicsObj = std::dynamic_pointer_cast<GraphicsObject>(obj);
-            if (graphicsObj != nullptr) graphicsObj->RenderForeground(&mContext);
+            if (graphicsObj != nullptr) {
+                mContext.CurrObject = obj;
+                graphicsObj->RenderForeground(&mContext);
+            }
 
         }
 
