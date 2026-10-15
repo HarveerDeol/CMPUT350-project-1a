@@ -1,21 +1,21 @@
-
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
-namespace CMPUT350 {
-class GameEngine;
-}
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
-#include "EngineView.h"
-#include "GameObject.h"
-#include "GameContext.h"
-#include "MathUtil.h"
 #include <SFML/Graphics.hpp>
 
+#include "DrawContext.h"
+#include "EngineView.h"
+#include "GameContext.h"
+#include "GameObject.h"
+#include "MathUtil.h"
+#include "NotificationManager.h"
 
 namespace CMPUT350 {
-
-class DrawContext;
 
 class GameEngine : public EngineView {
 public:
@@ -28,16 +28,26 @@ public:
     GameEngine& operator=(GameEngine&&) = delete;       // Prevent move-assignment
 
     void AddGameObject(std::shared_ptr<GameObject> gameObject) override;
+    void InstallKeyDownNotification(int, const std::string& notification) override;
+    void InstallKeyUpNotification(int, const std::string& notification) override;
+
+    const_iterator cbegin() const override;
+    const_iterator cend() const override;
+    const_iterator begin() const override;
+    const_iterator end() const override;
 
     void Run();
 
 private:
-    bool ProcessEvents(GameContext* context);
+    bool ProcessEvents();
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
     DrawContext mDrawContext;
     GameContext mContext;
+    NotificationManager mNotificationManager;
+    std::unordered_map<int, std::string> mKeyDownNotifications;
+    std::unordered_map<int, std::string> mKeyUpNotifications;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingObjects;
 };

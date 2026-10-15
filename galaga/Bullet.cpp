@@ -73,16 +73,6 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 {
 }
 
-/**
- * @brief Bullets do not respond to keyboard input.
- * @param context Unused (CMPUT350::GameContext*).
- * @param key Unused (char).
- * @return Always false, since the key was not handled (bool).
- */
-bool Bullet::HandleKeyEvent(CMPUT350::GameContext* context, char key)
-{
-    return false; // bullets don't respond to input directly
-}
 
 /**
  * @brief Bullets have nothing to draw behind other objects.

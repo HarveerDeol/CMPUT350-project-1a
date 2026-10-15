@@ -1,5 +1,9 @@
+
+
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
+
+#include <string>
 
 namespace CMPUT350 {
 
@@ -12,9 +16,9 @@ public:
     virtual void Update(GameContext *context);
     virtual void LateUpdate(GameContext *context);
     virtual void RenderUI(GameContext *context);
-    virtual bool HandleKeyEvent(GameContext *context, char key);
     virtual bool IsAlive() const;
     virtual void Kill();
+    virtual void ReceiveNotification(const std::string& key);
 private:
     bool mAlive = true;
 };

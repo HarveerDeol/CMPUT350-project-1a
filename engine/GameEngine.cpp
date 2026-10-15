@@ -31,6 +31,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     // set up GameContext
     mContext.mEngineView = this;
     mContext.ScreenContext = &mDrawContext;
+    mContext.mNotificationManager = &mNotificationManager;
 
 }
 
@@ -48,6 +49,30 @@ GameEngine::~GameEngine() {
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
     // add to pending objects to be added at the start of the next frame
     mPendingObjects.push_back(gameObject);
+}
+
+void GameEngine::InstallKeyDownNotification(int scancode, const std::string& notification) {
+    mKeyDownNotifications[scancode] = notification;
+}
+
+void GameEngine::InstallKeyUpNotification(int scancode, const std::string& notification) {
+    mKeyUpNotifications[scancode] = notification;
+}
+
+GameEngine::const_iterator GameEngine::cbegin() const {
+    return mGameObjects.cbegin();
+}
+
+GameEngine::const_iterator GameEngine::cend() const {
+    return mGameObjects.cend();
+}
+
+GameEngine::const_iterator GameEngine::begin() const {
+    return mGameObjects.cbegin();
+}
+
+GameEngine::const_iterator GameEngine::end() const {
+    return mGameObjects.cend();
 }
 
 /**
@@ -77,14 +102,16 @@ void GameEngine::Run() {
         // 1. Activate and initialize any objects added during the last frame
         for (size_t i=0; i < mPendingObjects.size();){
             mGameObjects.push_back(mPendingObjects[i]);
+            mContext.CurrObject = mPendingObjects[i];
             mPendingObjects[i]->Initialize(&mContext);
             i++;
         }
+        mContext.CurrObject.reset();
         // clean up pending to add new objects later
         mPendingObjects.clear();
 
         // 2. Process events
-        ProcessEvents(&mContext);
+        ProcessEvents();
 
         // 3. Update game objects
         for (auto& obj : mGameObjects) {
@@ -140,7 +167,7 @@ void GameEngine::Run() {
  * @param context The context passed to any object receiving a key event (GameContext*).
  * @return True if the window is still open after processing (bool).
  */
-bool GameEngine::ProcessEvents(GameContext *context)
+bool GameEngine::ProcessEvents()
 {
 	while (const std::optional event = mWindow->pollEvent())
 	{
@@ -148,17 +175,22 @@ bool GameEngine::ProcessEvents(GameContext *context)
 		{
 			mWindow->close();
 		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-		{
-			if (keyPressed->unicode < 128)
-			{
-				char key = static_cast<char>(keyPressed->unicode);
-				for (auto& obj : mGameObjects)
-				{
-					obj->HandleKeyEvent(context, key);
-				}
-			}
-		}
+        else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+        {
+            const auto it = mKeyDownNotifications.find(static_cast<int>(keyPressed->scancode));
+            if (it != mKeyDownNotifications.end())
+            {
+                mNotificationManager.Notify(it->second);
+            }
+        }
+        else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+        {
+            const auto it = mKeyUpNotifications.find(static_cast<int>(keyReleased->scancode));
+            if (it != mKeyUpNotifications.end())
+            {
+                mNotificationManager.Notify(it->second);
+            }
+        }
 	}
 	return mWindow->isOpen();
 }
