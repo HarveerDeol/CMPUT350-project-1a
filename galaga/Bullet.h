@@ -9,12 +9,8 @@
 class Bullet : public CMPUT350::CollisionObject
 {
 public:
-    Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player);
+    Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent);
     bool IsPlayerBullet();
-
-    // lets whoever fires this bullet register itself so the bullet can
-    // ignore its very first collision with its own shooter 
-    void SetShooter(const std::shared_ptr<CMPUT350::CollisionObject>& shooter);
 
     // GameObject Functions
     void Initialize(CMPUT350::GameContext* context) override;
@@ -29,6 +25,7 @@ public:
 
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
+    void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D& collisionPoint) override;
     const CMPUT350::Rect& GetBounds() override;
     const std::vector<CMPUT350::Shape>& GetShapes() override;
 
@@ -42,11 +39,15 @@ private:
     CMPUT350::Point2D mPrevLocation;
     CMPUT350::Point2D mHeading; // normalized direction of travel
     CMPUT350::Rect mBounds;
+    static constexpr int kDeathFrames = 4;
 
     bool mIsPlayerBullet;
     bool mAlive = true;
+    CMPUT350::Point2D mImpactPoint;
+    bool mHasImpact = false;
+    int mDeathTimer = -1;
 
-    std::weak_ptr<CMPUT350::CollisionObject> mShooter;
+    std::weak_ptr<CMPUT350::GameObject> mParent;
     std::vector<CMPUT350::Shape> mShapes;
 };
 #endif // BULLET_H

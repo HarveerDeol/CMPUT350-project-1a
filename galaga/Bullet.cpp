@@ -5,9 +5,10 @@
  * @param location Starting position of the bullet (CMPUT350::Point2D).
  * @param heading Direction of travel; normalized internally so speed is independent of input length (CMPUT350::Point2D).
  * @param player True if fired by the player, false if fired by an enemy (bool).
+ * @param parent The object that fired this bullet (std::weak_ptr<CMPUT350::GameObject>).
  */
-Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player)
-    : mLocation(location), mPrevLocation(location), mHeading(heading), mIsPlayerBullet(player)
+Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent)
+    : mLocation(location), mPrevLocation(location), mHeading(heading), mIsPlayerBullet(player), mParent(parent)
 {
     mHeading.Normalize(); // ensure movement speed is consistent regardless of the input vector's length
     mBounds = CMPUT350::Rect(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0)); // zero-size box at spawn until first Update
@@ -20,16 +21,6 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
 bool Bullet::IsPlayerBullet()
 {
     return mIsPlayerBullet;
-}
-
-/**
- * @brief Records the object that fired this bullet, so it can be ignored on first collision.
- * @param shooter The firing object, stored as a weak_ptr so the bullet does not keep it alive (std::shared_ptr<CMPUT350::CollisionObject>).
- * @return Nothing (void).
- */
-void Bullet::SetShooter(const std::shared_ptr<CMPUT350::CollisionObject>& shooter)
-{
-    mShooter = shooter;
 }
 
 /**
@@ -49,6 +40,20 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
  */
 void Bullet::Update(CMPUT350::GameContext* context)
 {
+    // handle life updates
+    if (mParent.expired()) {
+        Kill();
+        return;
+    }
+    if (mDeathTimer > 0) {
+        mDeathTimer--;
+        return;
+    }
+    if (mDeathTimer == 0) {
+        Kill();
+        return;
+    }
+
     mPrevLocation = mLocation;
     mLocation += mHeading * (kSpeed / 30.0f);
 
@@ -92,25 +97,55 @@ void Bullet::RenderBackground(CMPUT350::GameContext* context)
  */
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
+
     CMPUT350::RGBColor color = mIsPlayerBullet ? CMPUT350::Colors::cyan : CMPUT350::Colors::red;
-    context->ScreenContext->DrawLine(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0), 2.0f, color);
+
+    if (mHasImpact) {
+        // circle grows over time to show impact 
+        float progress = float(kDeathFrames - mDeathTimer) / float(kDeathFrames);
+        float radius = 2.0f + 8.0f * progress;
+
+        // draw circle of impact point
+        context->ScreenContext->DrawCircle(mImpactPoint, radius, color);
+    }
+    else {
+        context->ScreenContext->DrawLine(mPrevLocation - mLocation, CMPUT350::Point2D(0, 0), 2.0f, color);
+    }
 }
 
 /**
  * @brief Handles a collision with another collision object.
  * @param obj The object this bullet collided with (std::shared_ptr<CMPUT350::CollisionObject>).
+ * @param collisionPoint The point of collision (CMPUT350::Point2D).
  * @return Nothing (void).
  */
-void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
+void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D& collisionPoint)
 {
-
-    if (auto shooter = mShooter.lock()) {
-        if (shooter == obj) {
+    if (auto parent = mParent.lock()){
+        if (parent == obj) {
             return;
         }
     }
+    if (!mHasImpact || collisionPoint.y > mImpactPoint.y) {
+        mImpactPoint = collisionPoint;
+        mHasImpact = true;
+    }
 
-    Kill(); // bullets are consumed on their first real hit
+    // start short timer to allow the death to be shown
+    if (mDeathTimer < 0) {
+        mDeathTimer = kDeathFrames;
+    }
+}
+
+void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
+{
+    if (obj == mParent.lock()) {
+        return;
+    }
+
+    if (mDeathTimer < 0) {
+        mDeathTimer = kDeathFrames;
+    }
 }
 
 /**

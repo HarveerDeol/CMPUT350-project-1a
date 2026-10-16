@@ -3,7 +3,6 @@
 #include "Bullet.h"
 #include "NotificationManager.h"
 #include <algorithm>
-#include <SFML/Window/Keyboard.hpp>
 
 namespace {
 constexpr char kMoveLeftNotification[] = "player.move-left";
@@ -32,13 +31,6 @@ void Player::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, kMoveLeftNotification);
     context->mNotificationManager->Register(context->CurrObject, kMoveRightNotification);
     context->mNotificationManager->Register(context->CurrObject, kFireNotification);
-
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::A), kMoveLeftNotification);
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::D), kMoveRightNotification);
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::Space), kFireNotification);
 }
 
 /**
@@ -78,8 +70,7 @@ void Player::ReceiveNotification(const std::string& key)
             if (slot.expired())
             {
                 auto bullet = std::make_shared<Bullet>(
-                    mLocation, CMPUT350::Point2D(0.0f, -1.0f), true); // heading straight up, player = true
-                bullet->SetShooter(shared_from_this());
+                    mLocation, CMPUT350::Point2D(0.0f, -1.0f), true, shared_from_this()); // heading straight up, player = true
                 mContext->mEngineView->AddGameObject(bullet);
                 slot = bullet; // weak_ptr now tracks this bullet's lifetime
                 break; // only fire one bullet per press, even if both slots are open
