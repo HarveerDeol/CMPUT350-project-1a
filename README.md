@@ -1,37 +1,34 @@
 # CMPUT 350 HW 1
 
-## The following AI prompts were used for this project:
 
-"My CMake build fails with this issue, how do I fix this?
+## AI assistance
 
-[100%] Linking CXX executable Project1.exe
-ld.exe: _deps/sfml-build/lib/libfreetyped.a(unity_0_c.c.obj):
-in function `ft_hb_ft_reference_table':
-ft-hb-ft.c:67: undefined reference to `hb_blob_create'
-ft-hb-ft.c:86: undefined reference to `hb_face_create'
-ft-hb-ft.c:87: undefined reference to `hb_blob_destroy'
-ft-hb-ft.c:89: undefined reference to `hb_face_create_for_tables'
-... (dozens more hb_\* symbols)
-collect2.exe: error: ld returned 1 exit status"
+AI was used to help troubleshoot the Windows build and draft function
+documentation. The team reviewed and adjusted the suggestions to match the
+project.
 
-Reflection: Successfully fixes the build errors in a simple way.
-It explained that the font libraries were not linking properly.
+### Windows build troubleshooting
 
----
+Prompt: “My CMake build fails on Windows while linking SFML. The linker reports
+undefined references to HarfBuzz functions such as `hb_blob_create` and
+`hb_face_create`. What is causing this, and how can I fix it?”
 
-"What style of comments is this?
+Reflection: The response identified that HarfBuzz was not linked with FreeType,
+which helped resolve the linker errors in the Windows environment.
 
-/\*\*
+### Function documentation
 
-- @brief One-line summary of what the function does.
-- @param name What this parameter means.
-- @return What the caller gets back.
-  \*/
+Prompt: “What style of comments is this Doxygen format, and can you help me write
+similar brief `@brief`, `@param`, and `@return` comments for the functions I
+provide?” The example came from the project template's `DrawContext.cpp`.
 
-Can you help me replicate it for these functions?"
-[functions pasted in, across multiple messages]
-(comment snippet was taken from template's DrawContext.cpp)
+Reflection: The suggestions helped document existing functions consistently and
+introduced the team to Doxygen comments. The team reviewed and edited the
+generated documentation.
 
-Reflection: This saved time writing comments for functions that were already
-commented for comprehension, but not formally documented. It also taught us
-about Doxygen, which is the C++ documentation standard.
+## C++ style
+
+- Public API names use PascalCase; standard-library names such as `begin()` and
+  `end()` retain their required spelling.
+- Formatting follows the repository's `.clang-format` file, including four-space
+  indentation and consistent brace placement.

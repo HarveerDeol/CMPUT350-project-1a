@@ -29,10 +29,14 @@ public:
     virtual void AddGameObject(std::shared_ptr<GameObject> gameObject) = 0;
 
     /// @brief Sends `notification` through the notification manager when the key with this scancode is pressed down.
-    virtual void InstallKeyDownNotification(int, const std::string& notification) = 0;
+    /// @param scancode The key's SFML scancode (int).
+    /// @param notification The notification to send when pressed (const std::string&).
+    virtual void InstallKeyDownNotification(int scancode, const std::string& notification) = 0;
 
     /// @brief Sends `notification` through the notification manager when the key with this scancode is released.
-    virtual void InstallKeyUpNotification(int, const std::string& notification) = 0;
+    /// @param scancode The key's SFML scancode (int).
+    /// @param notification The notification to send when released (const std::string&).
+    virtual void InstallKeyUpNotification(int scancode, const std::string& notification) = 0;
 
     /// @brief Iterators over the objects currently in the engine.
     /// @return Const iterator to the first object.

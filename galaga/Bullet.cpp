@@ -137,6 +137,10 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     }
 }
 
+/**
+ * @brief Handles a collision without a contact point.
+ * @param obj The other collision object (const std::shared_ptr<CMPUT350::CollisionObject>&).
+ */
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
     if (obj == mParent.lock()) {
