@@ -3,6 +3,17 @@
 
 ********************************************
 
+Game Description:
+
+Feature Implementation:
+
+Team Member Contributions:
+
+Design Decisions/Changes to basic API:
+
+Galaga Class Game State Flow:
+
+Extra Credit:
 
 AI Usage Documentation:
 Prompt: "Walk me through the pseudocode for ProcessCollisions"
