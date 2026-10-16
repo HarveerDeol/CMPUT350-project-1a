@@ -22,10 +22,19 @@ constexpr int kShipsPerWave = 8;
 constexpr int kFramesBetweenWaves = 30;
 }
 
+/**
+ * @brief Creates the Galaga game manager.
+ * @param width Game window width in pixels (float).
+ * @param height Game window height in pixels (float).
+ */
 Galaga::Galaga(float width, float height) : mWidth(width), mHeight(height)
 {
 }
 
+/**
+ * @brief Registers game notifications and key mappings.
+ * @param context The current game context (CMPUT350::GameContext*).
+ */
 void Galaga::Initialize(CMPUT350::GameContext* context)
 {
     mContext = context;
@@ -42,6 +51,10 @@ void Galaga::Initialize(CMPUT350::GameContext* context)
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::Space), "player.fire");
     context->mEngineView->AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, mWidth, mHeight)));
 }
+/**
+ * @brief Advances the game state and timers for one frame.
+ * @param context The current game context (CMPUT350::GameContext*).
+ */
 void Galaga::Update(CMPUT350::GameContext* context)
 {
     // state machine
@@ -122,6 +135,10 @@ void Galaga::Update(CMPUT350::GameContext* context)
     }
 }
 
+/**
+ * @brief Draws the score and current game-state message.
+ * @param context The current game context (CMPUT350::GameContext*).
+ */
 void Galaga::RenderUI(CMPUT350::GameContext* context)
 {
     CMPUT350::DrawContext* gui = context->GUIContext;
@@ -162,6 +179,10 @@ void Galaga::RenderUI(CMPUT350::GameContext* context)
     }
 }
 
+/**
+ * @brief Handles coin, start, and enemy-death notifications.
+ * @param key The notification name (const std::string&).
+ */
 void Galaga::ReceiveNotification(const std::string& key)
 {
     if (key == kCoin)
@@ -188,6 +209,9 @@ void Galaga::ReceiveNotification(const std::string& key)
     }
 }
 
+/**
+ * @brief Creates and queues a player at the bottom center of the window.
+ */
 void Galaga::SpawnPlayer()
 {
     auto player = std::make_shared<Player>(CMPUT350::Point2D(mWidth / 2.0f, mHeight - 100.0f));
@@ -195,6 +219,9 @@ void Galaga::SpawnPlayer()
     mPlayer = player;
 }
 
+/**
+ * @brief Removes active game objects and restores the starfield.
+ */
 void Galaga::ClearObjects()
 {
     for (auto it = mContext->mEngineView->begin(); it != mContext->mEngineView->end(); ++it)
@@ -210,6 +237,9 @@ void Galaga::ClearObjects()
     mContext->mEngineView->AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, mWidth, mHeight)));
 }
 
+/**
+ * @brief Resets the counters used to spawn the current level's waves.
+ */
 void Galaga::ResetWaveProgress()
 {
     mWaveIndex = 0;
@@ -218,6 +248,9 @@ void Galaga::ResetWaveProgress()
     mEnemiesAlive = 0;
 }
 
+/**
+ * @brief Creates and queues the next enemy with its formation slot and entry path.
+ */
 void Galaga::SpawnNextEnemy()
 {
     const int wave = mWaveIndex;
@@ -275,6 +308,10 @@ void Galaga::SpawnNextEnemy()
     }
 }
 
+/**
+ * @brief Checks whether all living enemies have reached formation.
+ * @return True when every living enemy is in formation (bool).
+ */
 bool Galaga::AreAllEnemiesInFormation() const
 {
     int livingEnemiesSeen = 0;
@@ -295,6 +332,10 @@ bool Galaga::AreAllEnemiesInFormation() const
     return livingEnemiesSeen == mEnemiesAlive;
 }
 
+/**
+ * @brief Checks whether all living enemies have finished attacking and returning.
+ * @return True when no enemy is attacking or returning (bool).
+ */
 bool Galaga::AreAttackCyclesComplete() const
 {
     for (const auto& object : *mContext->mEngineView)
@@ -313,6 +354,9 @@ bool Galaga::AreAttackCyclesComplete() const
     return true;
 }
 
+/**
+ * @brief Selects and starts an attack for a deterministic formation enemy.
+ */
 void Galaga::SelectAttacker()
 {
     const auto player = std::dynamic_pointer_cast<Player>(mPlayer.lock());

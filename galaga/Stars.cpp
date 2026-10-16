@@ -43,6 +43,8 @@ void Stars::RenderBackground(CMPUT350::GameContext* context)
     }
 }
 
+/** @brief Returns the starfield's drawing origin. @return The origin point (CMPUT350::Point2D). */
 CMPUT350::Point2D Stars::GetLocation() const { return CMPUT350::Point2D(0, 0); }
 
+/** @brief Returns the starfield's rotation. @return Always zero radians (float). */
 float Stars::GetRotation() const { return 0.0f; }

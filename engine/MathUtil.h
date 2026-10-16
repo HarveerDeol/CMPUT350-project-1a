@@ -8,6 +8,7 @@ namespace CMPUT350 {
 
 struct Point2D {
     float x, y;
+    /// @brief Creates a point with the given coordinates. @param x Horizontal coordinate (float). @param y Vertical coordinate (float).
     Point2D(float x = 0, float y = 0) : x(x), y(y) {}
 
     /// @brief Euclidean distance between two points. @param other The other point (Point2D). @return The distance in pixels (double).
@@ -170,7 +171,9 @@ static Point2D operator*(float number, const Point2D &rhs) {
 struct Line {
     Point2D p1, p2;
 
+    /// @brief Creates a line segment from two points. @param p1 Start point (Point2D). @param p2 End point (Point2D).
     Line(Point2D p1 = {0, 0}, Point2D p2 = {0, 0}) : p1(p1), p2(p2) {}
+    /// @brief Creates a line segment from endpoint coordinates. @param x1 Start x (float). @param y1 Start y (float). @param x2 End x (float). @param y2 End y (float).
     Line(float x1, float y1, float x2, float y2) : p1(x1, y1), p2(x2, y2) {}
 
     /// @brief Length of the segment. @return Distance between its two endpoints (float).
@@ -260,7 +263,9 @@ struct Circle {
     Point2D center;
     float radius;
 
+    /// @brief Creates a circle from a center point and radius. @param c Center point (Point2D). @param r Radius (float).
     Circle(Point2D c = {0, 0}, float r = 0) : center(c), radius(r) {}
+    /// @brief Creates a circle from center coordinates and radius. @param x Center x (float). @param y Center y (float). @param r Radius (float).
     Circle(float x, float y, float r) : center(x, y), radius(r) {}
 };
 
@@ -279,14 +284,16 @@ struct Rect {
     Rect(float left, float top, float width, float height)
         : topLeft(Point2D(left, top)), width(width), height(height) {}
 
+    /// @brief Creates a rectangle from its top-left point and size. @param tl Top-left point (Point2D). @param w Width (int). @param h Height (int).
     Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
 
-    // Creates bounding box around p1 and p2 with positive width/height
+    /// @brief Creates a bounding rectangle around two points. @param p1 First point (Point2D). @param p2 Second point (Point2D).
     Rect(Point2D p1, Point2D p2)
         : topLeft(std::min(p1.x, p2.x), std::min(p1.y, p2.y)),
           width(fabs(p1.x - p2.x)),
           height(fabs(p1.y - p2.y)) {}
 
+    /// @brief Creates a square centered at a point with the given half-size. @param center Center point (Point2D). @param radius Half the square's width and height (float).
     Rect(Point2D center, float radius)
         : topLeft(center.x - radius, center.y - radius), width(2 * radius), height(2 * radius) {}
 

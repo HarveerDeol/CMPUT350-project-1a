@@ -11,6 +11,7 @@ class GameContext;
 
 class GameObject {
 public:
+    /// @brief Destroys the game object through its base type.
     virtual ~GameObject() = default;
     virtual void Initialize(GameContext *context);
     virtual void Update(GameContext *context);

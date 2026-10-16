@@ -4,6 +4,11 @@
 
 namespace CMPUT350 {
 
+/**
+ * @brief Adds an object as a listener for a notification.
+ * @param object The object to register (std::weak_ptr<GameObject>).
+ * @param key The notification name to listen for (const std::string&).
+ */
 void NotificationManager::Register(std::weak_ptr<GameObject> object, const std::string& key) { 
     std::vector<std::weak_ptr<GameObject>>& list = mListeners[key];
 
@@ -24,6 +29,11 @@ void NotificationManager::Register(std::weak_ptr<GameObject> object, const std::
  }
 
 
+/**
+ * @brief Removes an object from a notification's listeners.
+ * @param object The object to unregister (std::weak_ptr<GameObject>).
+ * @param key The notification name (const std::string&).
+ */
 void NotificationManager::Unregister(std::weak_ptr<GameObject> object, const std::string& key) {
     auto it = mListeners.find(key);
     if (it == mListeners.end()) {
@@ -42,6 +52,10 @@ void NotificationManager::Unregister(std::weak_ptr<GameObject> object, const std
     return;
  }
 
+/**
+ * @brief Sends a notification to all registered listeners.
+ * @param message The notification name to send (const std::string&).
+ */
 void NotificationManager::Notify(const std::string& message) { 
     auto it = mListeners.find(message);
     if (it == mListeners.end()) {

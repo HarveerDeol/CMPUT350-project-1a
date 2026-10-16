@@ -22,6 +22,7 @@ class EngineView {
 public:
     using const_iterator = tGameObject::const_iterator;
 
+    /// @brief Destroys the restricted engine view.
     virtual ~EngineView() = default;
 
     /// @brief Queues an object to join the game at the start of the next frame.
@@ -34,9 +35,13 @@ public:
     virtual void InstallKeyUpNotification(int, const std::string& notification) = 0;
 
     /// @brief Iterators over the objects currently in the engine.
+    /// @return Const iterator to the first object.
     virtual const_iterator cbegin() const = 0;
+    /// @return Const iterator past the last object.
     virtual const_iterator cend() const = 0;
+    /// @return Const iterator to the first object.
     virtual const_iterator begin() const = 0;
+    /// @return Const iterator past the last object.
     virtual const_iterator end() const = 0;
 };
 
