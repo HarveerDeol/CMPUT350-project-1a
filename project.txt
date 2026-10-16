@@ -13,6 +13,8 @@ Design Decisions/Changes to basic API:
 
 Galaga Class Game State Flow:
 
+During enemy entry, player deaths are handled after all ships have completed their entry paths. During play, the player respawns only after active attackers have returned to formation, followed by a short lives display.
+
 Extra Credit:
 
 AI Usage Documentation:

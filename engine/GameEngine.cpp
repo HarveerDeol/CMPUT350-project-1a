@@ -106,10 +106,6 @@ void GameEngine::Run() {
 
         // 1. Activate and initialize any objects added during the last frame
         for (size_t i=0; i < mPendingObjects.size();){
-            // set curr object
-            mContext.CurrObject = mPendingObjects[i];
-            mPendingObjects[i]->Initialize(&mContext);
-
             mGameObjects.push_back(mPendingObjects[i]);
             mContext.CurrObject = mPendingObjects[i];
             mPendingObjects[i]->Initialize(&mContext);

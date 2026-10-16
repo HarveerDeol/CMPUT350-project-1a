@@ -17,7 +17,13 @@ public:
     void ClearObjects();
 
 private:
-    enum class State { kWaiting, kStartup, kWaves, kPlaying, kGameOver };
+    enum class State { kWaiting, kStartup, kWaves, kPlaying, kRespawn, kGameOver };
+
+    void SpawnNextEnemy();
+    bool AreAllEnemiesInFormation() const;
+    bool AreAttackCyclesComplete() const;
+    void SelectAttacker();
+    void ResetWaveProgress();
 
     State mState = State::kWaiting;
     int mScore = 0;
@@ -26,6 +32,9 @@ private:
     int mCoins = 0;
     int mStateTimer = 0;
     int mEnemiesAlive = 0;
+    int mWaveIndex = 0;
+    int mShipIndex = 0;
+    int mSpawnTimer = 0;
     float mWidth, mHeight;
     CMPUT350::GameContext* mContext = nullptr;
     std::weak_ptr<CMPUT350::GameObject> mPlayer;
