@@ -105,8 +105,6 @@ void Player::ReceiveNotification(const std::string& key)
     mLocation.x += dx;
     float screenWidth = static_cast<float>(mContext->ScreenContext->GetWindowWidth());
     mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
-    mBounds = CMPUT350::Rect(mLocation, 20.0f);
-    return true;
 }
 
 /**
