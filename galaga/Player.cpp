@@ -3,7 +3,6 @@
 #include "Bullet.h"
 #include "NotificationManager.h"
 #include <algorithm>
-#include <SFML/Window/Keyboard.hpp>
 
 namespace {
 constexpr char kMoveLeftNotification[] = "player.move-left";
@@ -32,13 +31,6 @@ void Player::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, kMoveLeftNotification);
     context->mNotificationManager->Register(context->CurrObject, kMoveRightNotification);
     context->mNotificationManager->Register(context->CurrObject, kFireNotification);
-
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::A), kMoveLeftNotification);
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::D), kMoveRightNotification);
-    context->mEngineView->InstallKeyDownNotification(
-        static_cast<int>(sf::Keyboard::Scancode::Space), kFireNotification);
 }
 
 /**
