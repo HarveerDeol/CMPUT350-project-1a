@@ -1,7 +1,15 @@
 #include <cassert>
 #include "Player.h"
 #include "Bullet.h"
+#include "NotificationManager.h"
 #include <algorithm>
+#include <SFML/Window/Keyboard.hpp>
+
+namespace {
+constexpr char kMoveLeftNotification[] = "player.move-left";
+constexpr char kMoveRightNotification[] = "player.move-right";
+constexpr char kFireNotification[] = "player.fire";
+}
 
 /**
  * @brief Constructs the player ship centered at the given location.
@@ -20,6 +28,17 @@ Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(CMPUT350::Point2
  */
 void Player::Initialize(CMPUT350::GameContext* context)
 {
+    mContext = context;
+    context->mNotificationManager->Register(context->CurrObject, kMoveLeftNotification);
+    context->mNotificationManager->Register(context->CurrObject, kMoveRightNotification);
+    context->mNotificationManager->Register(context->CurrObject, kFireNotification);
+
+    context->mEngineView->InstallKeyDownNotification(
+        static_cast<int>(sf::Keyboard::Scancode::A), kMoveLeftNotification);
+    context->mEngineView->InstallKeyDownNotification(
+        static_cast<int>(sf::Keyboard::Scancode::D), kMoveRightNotification);
+    context->mEngineView->InstallKeyDownNotification(
+        static_cast<int>(sf::Keyboard::Scancode::Space), kFireNotification);
 }
 
 /**
@@ -41,25 +60,17 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 }
 
 /**
- * @brief Handles player input: A/D to move horizontally, space to fire.
- * @param context Provides screen width for clamping and engine access for firing (CMPUT350::GameContext*).
- * @param key The ASCII key that was pressed (char).
- * @return True if the key was handled, false otherwise (bool).
+ * @brief Handles player actions delivered by the notification manager.
+ * @param key The notification identifying the requested player action.
  */
-bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
+void Player::ReceiveNotification(const std::string& key)
 {
-    const float moveSpeed = 10.0f;
-    float dx = 0.0f;
+    if (mContext == nullptr)
+    {
+        return;
+    }
 
-    if (key == 'a' || key == 'A')
-    {
-        dx = -moveSpeed;
-    }
-    else if (key == 'd' || key == 'D')
-    {
-        dx = moveSpeed;
-    }
-        else if (key == ' ')
+    if (key == kFireNotification)
     {
         // Find an open bullet slot means the weak_ptr is expired or it was unassigned 
         for (auto& slot : mBullets)
@@ -69,22 +80,31 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
                 auto bullet = std::make_shared<Bullet>(
                     mLocation, CMPUT350::Point2D(0.0f, -1.0f), true); // heading straight up, player = true
                 bullet->SetShooter(shared_from_this());
-                context->mEngineView->AddGameObject(bullet);
+                mContext->mEngineView->AddGameObject(bullet);
                 slot = bullet; // weak_ptr now tracks this bullet's lifetime
                 break; // only fire one bullet per press, even if both slots are open
             }
         }
-        return true;
+        return;
+    }
+
+    float dx = 0.0f;
+    if (key == kMoveLeftNotification)
+    {
+        dx = -10.0f;
+    }
+    else if (key == kMoveRightNotification)
+    {
+        dx = 10.0f;
     }
     else
     {
-        return false;   // not a key we care about
+        return;
     }
 
     mLocation.x += dx;
-    float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
+    float screenWidth = static_cast<float>(mContext->ScreenContext->GetWindowWidth());
     mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
-    return true;
 }
 
 /**

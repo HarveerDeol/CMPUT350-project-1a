@@ -13,6 +13,7 @@ private:
     CMPUT350::Point2D mLocation;
     CMPUT350::Rect mBounds;
     bool mAlive;
+    CMPUT350::GameContext* mContext = nullptr;
     std::vector<CMPUT350::Shape> mShapes;
 
     std::weak_ptr<Bullet> mBullets[2]; // tracks the player's two bullet slots
@@ -24,7 +25,7 @@ public:
     void Initialize(CMPUT350::GameContext* context) override;
     void Update(CMPUT350::GameContext* context) override;
     void LateUpdate(CMPUT350::GameContext* context) override;
-    bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
+    void ReceiveNotification(const std::string& key) override;
     bool IsAlive() const override;
     void Kill() override;
 
