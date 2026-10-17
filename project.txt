@@ -1,24 +1,124 @@
-*******REPLACE ME WITH PROPER NOTES********
-- bullet death frame timer + expanding impact circle
-
-********************************************
-
 Game Description:
+
+A Galaga clone. The player controls a ship that moves left and right with A/D or the 
+arrow keys, and fires with space. Coins are inserted with 5 and the game is started with 1.
+
+Each level spawns 5 waves of 8 enemies that fly in along Bezier curves and move into
+a formation before diving at the player. The player starts with 3 lives. Clearing every
+enemy advances to the next level.
+
+--------------------------------------------------------------------------------
 
 Feature Implementation:
 
+Engine:
+- Multi-shape collision, where objects break down into component shapes and directed
+  lines report their first point of contact.
+- Two-phase collision detection, bounding boxes first and component shapes only on
+  overlap.
+- Object transforms, so objects draw and collide in their own local space.
+- A separate draw context for the GUI.
+- Cubic Bezier curves over multiple segments, giving position and slope along a path.
+- Notification manager, holding registrations through weak pointers.
+- Keyboard events routed into the notification manager, on key down and key up.
+- Object iteration over the engine's objects.
+
+Galaga:
+- Galaga class running the game state machine, wave spawning, score, lives and GUI.
+- Enemy entry along Bezier paths into formation, with deterministic attack runs.
+- Three enemy types with their own artwork, paths and firing patterns.
+- Bullets on the new collision API, terminating at the point of contact.
+- Player and Enemy1 built from multiple collision components.
+
+--------------------------------------------------------------------------------
+
 Team Member Contributions:
+
+Zhasheken de Guia:
+- Bezier class
+- Collision shape intersection functions in CollisionObject.cpp
+- DrawContext offsets, rotations and transforms
+- Separate GUI draw context, frame counter and current object tracking
+- Collision processing
+- Bullet & Player edits for new collision API
+- Galaga game state machine and GUI
+- Player collision breakdown and movement fixes
+
+Harveer Deol:
+- Notification manager
+- EngineView interface updates for the new engine features
+- GameObject and GraphicsObject updates for the new interfaces
+- Three enemy types and their attack behaviour in Enemies.h/.cpp
+- Enemy base class implementation
+- Wave spawning paths
+
+--------------------------------------------------------------------------------
 
 Design Decisions/Changes to basic API:
 
+- Collision bounds and shapes are in local coordinates around the object's origin
+  rather than world space. The engine applies each object's location and rotation
+  before testing them.
+- A destroyed bullet draws its impact circle growing from radius 2 to radius 12 over
+  four frames before it is removed, rather than a single fixed circle.
+- Held movement keys are tracked with a flag set on key down and cleared on key up, and
+  the flag is applied once per frame in Update to make movement smoother.
+- Difficulty rises with the level number. Attack runs begin at one attacker every 36
+  frames and tighten to four attackers every 12 frames by level 13.
+
+--------------------------------------------------------------------------------
+
 Galaga Class Game State Flow:
 
-During enemy entry, player deaths are handled after all ships have completed their entry paths. During play, the player respawns only after active attackers have returned to formation, followed by a short lives display.
+1. Waiting.
+Shows INSERT COIN, or PRESS 1 TO START once a coin is in. 5 adds a coin, 1 resets score,
+lives and level, then moves to Startup.
+
+2. Startup.
+Spawns the player ship and shows the level number for two seconds, then moves to Waves.
+
+3. Waves.
+Spawns 8 enemies per wave for 5 waves, each with its entry path. Once all 40 have reached
+formation, moves to Playing.
+
+4. Playing.
+Enemies attack and the player fights. Clearing the level returns to Startup, a death with
+lives left moves to Respawn, and losing the last life moves to GameOver.
+
+5. Respawn.
+Waits for attacking enemies to return to formation, shows the remaining lives, then
+spawns the player and returns to Playing.
+
+6. GameOver.
+Shows GAME OVER for four seconds, clears the objects, and returns to Waiting.
+
+Player deaths during enemy entry are handled after all ships have completed their entry
+paths.
+
+Attackers are chosen on a fixed frame interval, taking the enemy in formation closest
+to the player's x position, with ties broken by position.
+
+--------------------------------------------------------------------------------
 
 Extra Credit:
 
+N/A
+
+--------------------------------------------------------------------------------
+
 AI Usage Documentation:
+
+1. ProcessCollisions structure
 Prompt: "Walk me through the pseudocode for ProcessCollisions"
-"Can you show me what to put inside the overlap width/height check?"
-Reflection: Useful for the order of operations rather than the math. It also caught that our bounds were still
-in world coordinates while the shapes were local, which was inconsistent so we changed it.
+        "Can you show me what to put inside the overlap width/height check?"
+Reflection: Useful for the order of operations rather than the math. It also caught that
+our bounds were still in world coordinates while the shapes were local, which was
+inconsistent so we changed it.
+
+2. Contact point when objects have several collision shapes
+Prompt: "Now that objects have several collision shapes, the engine stops at the first
+        shape pair that reports a hit. How should it pick the contact point instead?"
+Reflection: Pointed out that our line functions already returned the earliest point, so
+the problem was in the loop above them, which stopped at the first pair of shapes that
+collided instead of comparing all of them. We removed the early exit and kept the point
+closest to the start of the line.
