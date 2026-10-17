@@ -21,7 +21,9 @@ constexpr float kMoveSpeed = 6.0f;
 Player::Player(CMPUT350::Point2D loc) : mLocation(loc), mBounds(CMPUT350::Point2D(0, 0), 20.0f), mAlive(true)
 
 {
-    mShapes.push_back(CMPUT350::Rect(-20.0f, -20.0f, 40.0f, 40.0f));
+    mShapes.push_back(CMPUT350::Rect(-6.0f, -20.0f, 12.0f, 40.0f));   // nose and body
+    mShapes.push_back(CMPUT350::Rect(-20.0f, -18.0f, 14.0f, 38.0f));  // left wing
+    mShapes.push_back(CMPUT350::Rect(6.0f, -18.0f, 14.0f, 38.0f));    // right wing
 }
 
 /**

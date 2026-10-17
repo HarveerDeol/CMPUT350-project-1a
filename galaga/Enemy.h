@@ -60,7 +60,7 @@ protected:
     // ---- Configuration helpers for subclasses (call from the subclass constructor) ----
     void SetStats(int health, int pointsInFormation, int pointsAttacking,
                   const CMPUT350::RGBColor& baseColor, const CMPUT350::RGBColor& damagedColor);
-    void SetCollision(const CMPUT350::Shape& shape, const CMPUT350::Rect& bounds);
+    void SetCollision(const std::vector<CMPUT350::Shape>& shapes, const CMPUT350::Rect& bounds);
 
     // ---- Behaviour helpers for subclasses ----
     void BeginAttack(const std::vector<CMPUT350::Point2D>& pts, float speed, const CMPUT350::Point2D& target);

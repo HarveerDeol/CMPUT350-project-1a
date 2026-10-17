@@ -63,14 +63,13 @@ void Enemy::SetStats(int health, int pointsInFormation, int pointsAttacking,
 }
 
 /**
- * @brief Replaces the collision shape and bounding box (local coordinates around GetLocation).
- * @param shape The single collision shape: a line, circle or axis-aligned rectangle (CMPUT350::Shape).
- * @param bounds Axis-aligned box that fully contains the shape (CMPUT350::Rect).
+ * @brief Replaces the collision shapes and bounding box (local coordinates around GetLocation).
+ * @param shapes The collision shapes making up the enemy: lines, circles or axis-aligned rectangles (std::vector<CMPUT350::Shape>).
+ * @param bounds Axis-aligned box that fully contains every shape (CMPUT350::Rect).
  */
-void Enemy::SetCollision(const CMPUT350::Shape& shape, const CMPUT350::Rect& bounds)
+void Enemy::SetCollision(const std::vector<CMPUT350::Shape>& shapes, const CMPUT350::Rect& bounds)
 {
-    mShapes.clear();
-    mShapes.push_back(shape);
+    mShapes = shapes;
     mBounds = bounds;
 }
 
