@@ -47,6 +47,8 @@ public:
     // lines, points/circles, or axis-aligned rectangles
     /// @brief Gets the object's local collision shapes. @return The collision shapes (const std::vector<Shape>&).
     virtual const std::vector<Shape> &GetShapes() = 0;
+    /// @brief Reports whether the object ever moves. @return True if the object is fixed in place (bool).
+    virtual bool IsStatic() const { return false; }
 };
 
 }  // namespace CMPUT350
