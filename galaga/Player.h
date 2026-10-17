@@ -16,6 +16,9 @@ private:
     CMPUT350::GameContext* mContext = nullptr;
     std::vector<CMPUT350::Shape> mShapes;
 
+    bool mMovingLeft = false;
+    bool mMovingRight = false;
+
     std::weak_ptr<Bullet> mBullets[2]; // tracks the player's two bullet slots
 
 public:

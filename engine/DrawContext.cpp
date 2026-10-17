@@ -2,14 +2,21 @@
 
 namespace CMPUT350 {
 
-//stores the shared window and font so every draw call has something to render onto
+/**
+ * @brief Creates a drawing context for a window and font.
+ * @param window The window to draw into (std::shared_ptr<sf::RenderWindow>).
+ * @param font The font used for text (std::shared_ptr<sf::Font>).
+ */
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
     : mWindow(window), mFont(font), mOffset(0, 0), mRotation(0.0f) {}
 
+/** @brief Sets the position offset used by drawing operations. @param p The offset (Point2D). */
 void DrawContext::SetContextOffset(Point2D p) { mOffset = p; }
 
+/** @brief Sets the rotation used by drawing operations. @param rotation Rotation in radians (float). */
 void DrawContext::SetContextRotation(float rotation) { mRotation = rotation; }
 
+/** @brief Applies the current offset and rotation to a point. @param p The point to transform (Point2D). @return The transformed point (Point2D). */
 Point2D DrawContext::Transform(Point2D p) {
     // work out the sine and cosine once, both lines of the rotation need them
     float sinRotation = std::sin(mRotation);
@@ -23,6 +30,7 @@ Point2D DrawContext::Transform(Point2D p) {
     return Point2D(rotatedX + mOffset.x, rotatedY + mOffset.y);
 }
 
+/** @brief Reverses the current offset and rotation for a point. @param p The point to transform back (Point2D). @return The local point (Point2D). */
 Point2D DrawContext::ReverseTransform(Point2D p) {
     float sinRotation = std::sin(mRotation);
     float cosRotation = std::cos(mRotation);
@@ -38,6 +46,7 @@ Point2D DrawContext::ReverseTransform(Point2D p) {
     return Point2D(localX, localY);
 }
 
+/** @brief Transforms a rectangle and returns its enclosing axis-aligned bounds. @param r The rectangle to transform (Rect). @return The transformed bounds (Rect). */
 Rect DrawContext::Transform(Rect r) {
     // get the four corners of the rectangle
     Point2D topLeft = r.topLeft;
@@ -61,7 +70,13 @@ Rect DrawContext::Transform(Rect r) {
 }
 
 
-//draws text with its origin at its own center, so p marks the middle of the text rather than a corner
+/**
+ * @brief Draws text centered at a point.
+ * @param text The text to draw (const std::string&).
+ * @param pixelSize Text size in pixels (int).
+ * @param p The text center (Point2D).
+ * @param c Text color (RGBColor).
+ */
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
     p = Transform(p);
     sf::Text drawText(*mFont);
@@ -82,7 +97,13 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
     mWindow->draw(drawText);
 }
 
-//draws text with its default origin so p marks the top-left corner of the text
+/**
+ * @brief Draws text with its top-left corner at a point.
+ * @param text The text to draw (const std::string&).
+ * @param pixelSize Text size in pixels (int).
+ * @param p The text position (Point2D).
+ * @param c Text color (RGBColor).
+ */
 void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
     p = Transform(p);
     sf::Text drawText(*mFont);
@@ -97,7 +118,7 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
     mWindow->draw(drawText);
 }
 
-//draws a filled circle centered at p 
+/** @brief Draws a filled circle. @param p The circle center (Point2D). @param radius The circle radius (float). @param c The circle color (RGBColor). */
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     p = Transform(p);
     sf::CircleShape circle(radius);
@@ -111,7 +132,7 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     mWindow->draw(circle);
 }
 
-//draws a filled rectangle using r.topLeft as the corner and r.width/height as its size
+/** @brief Draws a filled rectangle. @param r The rectangle to draw (Rect). @param c The fill color (RGBColor). */
 void DrawContext::DrawRect(Rect r, RGBColor c) {
     r.topLeft = Transform(r.topLeft);
     sf::RectangleShape rect({r.width, r.height});
@@ -125,7 +146,7 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
     mWindow->draw(rect);
 }
 
-//draws only the outline of a rectangle
+/** @brief Draws a rectangle outline. @param r The rectangle to outline (Rect). @param width Outline width in pixels (float). @param c The outline color (RGBColor). */
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
     r.topLeft = Transform(r.topLeft);
     sf::RectangleShape rect({r.width, r.height});
@@ -141,19 +162,7 @@ void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
     mWindow->draw(rect);
 }
 
-/**
- * @brief Draws a line between two points with a specified width and color.
- *
- * @param from The starting point of the line (Point2D).
- * @param to The ending point of the line (Point2D).
- * @param width The width of the line in pixels.
- * @param c The color of the line, specified as an RGBColor object.
- *
- * This function calculates the distance and angle between the two points
- * and uses a polygone shape to represent the line. The line is drawn
- * relative to the world offset and rendered onto the associated window.
- */
-//builds a thin rotated rectangle to fake a width able line, since SFML has no native line width primitive.
+/** @brief Draws a line between two points. @param from The start point (Point2D). @param to The end point (Point2D). @param width Line width in pixels (float). @param c The line color (RGBColor). */
 void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
     from = Transform(from);
     to = Transform(to);
@@ -172,10 +181,10 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
     mWindow->draw(line);
 }
 
-//returns the window's current pixel width.
+/** @brief Gets the window width in pixels. @return The window width (int). */
 int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 
-//returns the window's current pixel height.
+/** @brief Gets the window height in pixels. @return The window height (int). */
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
 }   // namespace CMPUT350

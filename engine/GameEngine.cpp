@@ -2,7 +2,7 @@
 #include "CollisionObject.h"
 #include "GraphicsObject.h"
 #include "FontData.h"
-#include "CollisionObject.h"
+
 
 
 namespace CMPUT350 {
@@ -38,7 +38,9 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 
 }
 
-/// @brief Closes the window as a failsafe, in case the engine is destroyed while it is still open. @return Nothing (void).
+/**
+ * @brief Closes the game window when the engine is destroyed.
+ */
 GameEngine::~GameEngine() {
     // Cleanup resources
     mWindow->close();
@@ -54,26 +56,40 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
     mPendingObjects.push_back(gameObject);
 }
 
+/**
+ * @brief Maps a key press to a notification.
+ * @param scancode The key's SFML scancode (int).
+ * @param notification The notification to send when the key is pressed (const std::string&).
+ */
 void GameEngine::InstallKeyDownNotification(int scancode, const std::string& notification) {
     mKeyDownNotifications[scancode] = notification;
 }
 
+/**
+ * @brief Maps a key release to a notification.
+ * @param scancode The key's SFML scancode (int).
+ * @param notification The notification to send when the key is released (const std::string&).
+ */
 void GameEngine::InstallKeyUpNotification(int scancode, const std::string& notification) {
     mKeyUpNotifications[scancode] = notification;
 }
 
+/** @brief Returns a const iterator to the first game object. */
 GameEngine::const_iterator GameEngine::cbegin() const {
     return mGameObjects.cbegin();
 }
 
+/** @brief Returns a const iterator past the last game object. */
 GameEngine::const_iterator GameEngine::cend() const {
     return mGameObjects.cend();
 }
 
+/** @brief Returns a const iterator to the first game object. */
 GameEngine::const_iterator GameEngine::begin() const {
     return mGameObjects.cbegin();
 }
 
+/** @brief Returns a const iterator past the last game object. */
 GameEngine::const_iterator GameEngine::end() const {
     return mGameObjects.cend();
 }
@@ -106,10 +122,6 @@ void GameEngine::Run() {
 
         // 1. Activate and initialize any objects added during the last frame
         for (size_t i=0; i < mPendingObjects.size();){
-            // set curr object
-            mContext.CurrObject = mPendingObjects[i];
-            mPendingObjects[i]->Initialize(&mContext);
-
             mGameObjects.push_back(mPendingObjects[i]);
             mContext.CurrObject = mPendingObjects[i];
             mPendingObjects[i]->Initialize(&mContext);
@@ -198,8 +210,7 @@ void GameEngine::Run() {
 
 /**
  * @brief Drains this frame's SFML event queue.
- * @param context The context passed to any object receiving a key event (GameContext*).
- * @return True if the window is still open after processing (bool).
+ * @return True if the window remains open after processing events (bool).
  */
 bool GameEngine::ProcessEvents()
 {
@@ -229,6 +240,11 @@ bool GameEngine::ProcessEvents()
 	return mWindow->isOpen();
 }
 
+/**
+ * @brief Transforms a collision shape using the current draw transform.
+ * @param shape The shape to transform (const Shape&).
+ * @return The transformed shape (Shape).
+ */
 Shape GameEngine::TransformShape(const Shape& shape) {
     if (shape.t == ShapeType::kLine) {
         //transform both ends
@@ -247,6 +263,9 @@ Shape GameEngine::TransformShape(const Shape& shape) {
     return shape;
 }
 
+/**
+ * @brief Checks overlapping game objects for shape-level collisions.
+ */
 void GameEngine::ProcessCollisions(){
     for (size_t i = 0; i < mGameObjects.size(); i++) {
         auto objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);

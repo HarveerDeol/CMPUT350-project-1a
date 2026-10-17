@@ -24,6 +24,7 @@ public:
     static constexpr const char* kDiedKey = "enemy.died";
 
     Enemy(CMPUT350::Point2D formationPos, const std::vector<CMPUT350::Point2D>& path);
+    /// @brief Destroys the enemy through its base type.
     ~Enemy() override = default;
 
     // GameObject Functions

@@ -8,6 +8,10 @@ namespace {
 constexpr char kMoveLeftNotification[] = "player.move-left";
 constexpr char kMoveRightNotification[] = "player.move-right";
 constexpr char kFireNotification[] = "player.fire";
+constexpr char kStopLeftNotification[] = "player.stop-left";
+constexpr char kStopRightNotification[] = "player.stop-right";
+
+constexpr float kMoveSpeed = 6.0f;
 }
 
 /**
@@ -31,6 +35,8 @@ void Player::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, kMoveLeftNotification);
     context->mNotificationManager->Register(context->CurrObject, kMoveRightNotification);
     context->mNotificationManager->Register(context->CurrObject, kFireNotification);
+    context->mNotificationManager->Register(context->CurrObject, kStopLeftNotification);
+    context->mNotificationManager->Register(context->CurrObject, kStopRightNotification);
 }
 
 /**
@@ -40,6 +46,26 @@ void Player::Initialize(CMPUT350::GameContext* context)
  */
 void Player::Update(CMPUT350::GameContext* context)
 {
+    mContext = context;
+
+    float dx = 0.0f;
+    if (mMovingLeft)
+    {
+        dx -= kMoveSpeed;
+    }
+    if (mMovingRight)
+    {
+        dx += kMoveSpeed;
+    }
+
+    if (dx == 0.0f)
+    {
+        return;
+    }
+
+    mLocation.x += dx;
+    float screenWidth = static_cast<float>(context->ScreenContext->GetWindowWidth());
+    mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
 }
 
 /**
@@ -79,23 +105,22 @@ void Player::ReceiveNotification(const std::string& key)
         return;
     }
 
-    float dx = 0.0f;
     if (key == kMoveLeftNotification)
     {
-        dx = -10.0f;
+        mMovingLeft = true;
     }
     else if (key == kMoveRightNotification)
     {
-        dx = 10.0f;
+        mMovingRight = true;
     }
-    else
+    else if (key == kStopLeftNotification)
     {
-        return;
+        mMovingLeft = false;
     }
-
-    mLocation.x += dx;
-    float screenWidth = static_cast<float>(mContext->ScreenContext->GetWindowWidth());
-    mLocation.x = std::clamp(mLocation.x, 20.0f, screenWidth - 20.0f);
+    else if (key == kStopRightNotification)
+    {
+        mMovingRight = false;
+    }
 }
 
 /**
@@ -159,10 +184,10 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
  */
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
-        std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(obj);
-    if (bullet != nullptr && bullet->IsPlayerBullet())
+    std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(obj);
+    if (bullet != nullptr && !bullet->IsPlayerBullet())
     {
-        // do nothing, player bullets don't hurt the player
+        Kill();
     }
 }
 

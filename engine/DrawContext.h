@@ -10,6 +10,7 @@ namespace CMPUT350 {
 
 struct RGBColor {
     uint8_t r, g, b;
+    /// @brief Creates a color from red, green, and blue values. @param r Red component (uint8_t). @param g Green component (uint8_t). @param b Blue component (uint8_t).
     RGBColor(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
 };
 
