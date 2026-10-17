@@ -1,3 +1,6 @@
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
+
 namespace CMPUT350 {
 
 
@@ -153,3 +156,5 @@ const unsigned int ScanCount = 146;
 }
 
 }
+
+#endif  // KEYBOARD_H

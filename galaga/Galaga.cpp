@@ -4,10 +4,10 @@
 #include "Player.h"
 #include "Stars.h"
 #include "NotificationManager.h"
+#include "Keyboard.h"
 
 #include <algorithm>
 #include <cmath>
-#include <SFML/Window/Keyboard.hpp>
 
 namespace {
 constexpr char kCoin[] = "game.coin";
@@ -43,15 +43,20 @@ void Galaga::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, kStart);
     context->mNotificationManager->Register(context->CurrObject, kEnemyDied);
 
-    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::Num5), kCoin);
-    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::Num1), kStart);
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Num5, kCoin);
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Num1, kStart);
 
-    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::A), "player.move-left");
-    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::D), "player.move-right");
-    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::Space), "player.fire");
+    // WASD and the arrow keys both work
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::A, "player.move-left");
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Left, "player.move-left");
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::D, "player.move-right");
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Right, "player.move-right");
+    context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Space, "player.fire");
 
-    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Scancode::A), "player.stop-left");
-    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Scancode::D), "player.stop-right");
+    context->mEngineView->InstallKeyUpNotification(CMPUT350::Key::A, "player.stop-left");
+    context->mEngineView->InstallKeyUpNotification(CMPUT350::Key::Left, "player.stop-left");
+    context->mEngineView->InstallKeyUpNotification(CMPUT350::Key::D, "player.stop-right");
+    context->mEngineView->InstallKeyUpNotification(CMPUT350::Key::Right, "player.stop-right");
     context->mEngineView->AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, mWidth, mHeight)));
 }
 /**
