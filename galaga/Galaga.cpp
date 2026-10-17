@@ -49,6 +49,9 @@ void Galaga::Initialize(CMPUT350::GameContext* context)
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::A), "player.move-left");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::D), "player.move-right");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Scancode::Space), "player.fire");
+
+    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Scancode::A), "player.stop-left");
+    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Scancode::D), "player.stop-right");
     context->mEngineView->AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, mWidth, mHeight)));
 }
 /**

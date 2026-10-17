@@ -1,4 +1,6 @@
 #include "Bullet.h"
+#include "Enemy.h"
+#include "Player.h"
 
 /**
  * @brief Constructs a bullet at a starting location, travelling in a given direction.
@@ -121,6 +123,15 @@ void Bullet::RenderForeground(CMPUT350::GameContext* context)
  */
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D& collisionPoint)
 {
+    if (mIsPlayerBullet)
+    {
+        if (std::dynamic_pointer_cast<Enemy>(obj) == nullptr) return;
+    }
+    else
+    {
+        if (std::dynamic_pointer_cast<Player>(obj) == nullptr) return;
+    }
+
     if (auto parent = mParent.lock()){
         if (parent == obj) {
             return;
@@ -143,6 +154,15 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
  */
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
+    if (mIsPlayerBullet)
+    {
+        if (std::dynamic_pointer_cast<Enemy>(obj) == nullptr) return;
+    }
+    else
+    {
+        if (std::dynamic_pointer_cast<Player>(obj) == nullptr) return;
+    }
+
     if (obj == mParent.lock()) {
         return;
     }
