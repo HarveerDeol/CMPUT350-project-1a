@@ -1,4 +1,7 @@
-if (CMAKE_VERSION VERSION_LESS "3.28")
+set(BUNDLED_SFML "${CMAKE_CURRENT_SOURCE_DIR}/../extern/sfml-3.1.0-linux-x86_64-ubuntu20.04")
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux"
+    AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|AMD64)$"
+    AND EXISTS "${BUNDLED_SFML}/include/SFML/Config.hpp")
     include(${CMAKE_SOURCE_DIR}/cmake/ImportSFML.cmake)
 else ()
     include(FetchContent)
