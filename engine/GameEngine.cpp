@@ -23,7 +23,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 
     // set framerate
     mWindow->setFramerateLimit(30);
-    
+
     // Font loading code
     if (!mFont->openFromMemory(&_font, _font_len))
     {
@@ -142,7 +142,7 @@ void GameEngine::Run() {
 
         // 4. Process collision events
         ProcessCollisions();
-        
+
 /*      old collision processing
          for (size_t i = 0; i < mGameObjects.size(); i++) {
             auto objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);
@@ -212,14 +212,13 @@ void GameEngine::Run() {
  * @brief Drains this frame's SFML event queue.
  * @return True if the window remains open after processing events (bool).
  */
-bool GameEngine::ProcessEvents()
-{
-	while (const std::optional event = mWindow->pollEvent())
-	{
-		if (event->is<sf::Event::Closed>())
-		{
-			mWindow->close();
-		}
+bool GameEngine::ProcessEvents() {
+    while (const std::optional event = mWindow->pollEvent())
+    {
+        if (event->is<sf::Event::Closed>())
+        {
+            mWindow->close();
+        }
         else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
             const auto it = mKeyDownNotifications.find(static_cast<int>(keyPressed->scancode));
@@ -236,8 +235,8 @@ bool GameEngine::ProcessEvents()
                 mNotificationManager.Notify(it->second);
             }
         }
-	}
-	return mWindow->isOpen();
+    }
+    return mWindow->isOpen();
 }
 
 /**
@@ -282,7 +281,7 @@ void GameEngine::ProcessCollisions(){
             mDrawContext.SetContextRotation(objB->GetRotation());
             overlap &= mDrawContext.Transform(objB->GetBounds());
 
-            
+
             if (overlap.width > 0 && overlap.height > 0) {
                 mDrawContext.SetContextOffset(objA->GetLocation());
                 mDrawContext.SetContextRotation(objA->GetRotation());

@@ -43,6 +43,7 @@ Zhasheken de Guia:
 - Bullet & Player edits for new collision API
 - Galaga game state machine and GUI
 - Player collision breakdown and movement fixes
+- Vector2D alias
 
 Harveer Deol:
 - Notification manager
