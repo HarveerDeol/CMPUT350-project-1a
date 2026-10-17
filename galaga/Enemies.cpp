@@ -27,7 +27,10 @@ bool InFiringZone(const Point2D& p, const Point2D& target)
 Enemy1::Enemy1(Point2D loc, const std::vector<Point2D>& path) : Enemy(loc, path)
 {
     SetStats(1, 50, 100, CMPUT350::Colors::yellow, CMPUT350::Colors::yellow);
-    SetCollision(Rect(-18.0f, -14.0f, 36.0f, 28.0f), Rect(-18.0f, -14.0f, 36.0f, 28.0f));
+    Rect leftWing(-18.0f, -10.0f, 11.0f, 18.0f);
+    Rect rightWing(7.0f, -10.0f, 11.0f, 18.0f);
+    Circle body(Point2D(0.0f, 0.0f), 11.0f);
+    SetCollision({leftWing, rightWing, body}, Rect(-18.0f, -14.0f, 36.0f, 28.0f));
 }
 
 /**
@@ -98,7 +101,7 @@ void Enemy1::RenderForeground(CMPUT350::GameContext* context)
 Enemy2::Enemy2(Point2D loc, const std::vector<Point2D>& path) : Enemy(loc, path)
 {
     SetStats(1, 80, 160, CMPUT350::Colors::magenta, CMPUT350::Colors::magenta);
-    SetCollision(Circle(Point2D(0.0f, 0.0f), 16.0f), Rect(Point2D(0.0f, 0.0f), 16.0f));
+    SetCollision({Circle(Point2D(0.0f, 0.0f), 16.0f)}, Rect(Point2D(0.0f, 0.0f), 16.0f));
 }
 
 /**
@@ -173,7 +176,7 @@ void Enemy2::RenderForeground(CMPUT350::GameContext* context)
 Enemy3::Enemy3(Point2D loc, const std::vector<Point2D>& path) : Enemy(loc, path)
 {
     SetStats(2, 150, 400, CMPUT350::Colors::green, CMPUT350::RGBColor(160, 40, 200));
-    SetCollision(Rect(-20.0f, -16.0f, 40.0f, 32.0f), Rect(-20.0f, -16.0f, 40.0f, 32.0f));
+    SetCollision({Rect(-20.0f, -16.0f, 40.0f, 32.0f)}, Rect(-20.0f, -16.0f, 40.0f, 32.0f));
 }
 
 /**

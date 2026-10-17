@@ -299,13 +299,40 @@ void GameEngine::ProcessCollisions(){
                     shapesB.push_back(TransformShape(s));
                 }
 
-                Point2D contactPoint;
-                bool hasPoint = false;
+                // check every shape of A against every shape of B
+                // a line has to report its earliest point, so we cant stop at the first hit
                 bool hit = false;
-                for (size_t a = 0; a < shapesA.size() && !hit; a++) {
-                    for (size_t b = 0; b < shapesB.size() && !hit; b++) {
-                        if (Intersects(shapesA[a], shapesB[b], contactPoint, hasPoint)) {
+                bool hasPoint = false;
+                Point2D contactPoint;
+                float closestDistance = 0.0f;
+
+                for (size_t a = 0; a < shapesA.size(); a++) {
+                    for (size_t b = 0; b < shapesB.size(); b++) {
+                        Point2D candidatePoint;
+                        bool candidateHasPoint = false;
+
+                        if (Intersects(shapesA[a], shapesB[b], candidatePoint, candidateHasPoint)) {
                             hit = true;
+
+                            //only line pairs give a point, areas just overlap
+                            if (candidateHasPoint) {
+                                //one of the two is a line, find where it starts
+                                Point2D lineStart;
+                                if (shapesA[a].t == ShapeType::kLine) {
+                                    lineStart = shapesA[a].shape.line.p1;
+                                }
+                                else {
+                                    lineStart = shapesB[b].shape.line.p1;
+                                }
+
+                                //keep the point that comes earliest along the line
+                                float distance = lineStart.Distance(candidatePoint);
+                                if (!hasPoint || distance < closestDistance) {
+                                    contactPoint = candidatePoint;
+                                    closestDistance = distance;
+                                    hasPoint = true;
+                                }
+                            }
                         }
                     }
                 }

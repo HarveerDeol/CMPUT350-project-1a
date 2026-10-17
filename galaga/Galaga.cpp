@@ -70,12 +70,13 @@ void Galaga::Update(CMPUT350::GameContext* context)
 
     if (mState == State::kStartup) // waiting for the startup timer to expire
     {
-        mStateTimer--;
-        if (mStateTimer <= 0) // spawn the player and start the waves
+        if (mPlayer.expired())
         {
-            if (mPlayer.expired()){
-                SpawnPlayer();
-            }
+            SpawnPlayer();
+        }
+        mStateTimer--;
+        if (mStateTimer <= 0) // start the waves
+        {
             ResetWaveProgress();
             mState = State::kWaves;
         }
