@@ -43,6 +43,7 @@ Zhasheken de Guia:
 - Bullet & Player edits for new collision API
 - Galaga game state machine and GUI
 - Player collision breakdown and movement fixes
+- Vector2D alias
 
 Harveer Deol:
 - Notification manager
@@ -102,7 +103,15 @@ to the player's x position, with ties broken by position.
 
 Extra Credit:
 
-N/A
+- Vector2D alias implementation
+MathUtil.h forward declares Point2D, then aliases it:
+
+struct Point2D;
+using Vector2D = Point2D;
+
+This replaces any uses of Point2D throughout the engine and galaga implementations 
+that were better suited to be named as Vector2Ds, such as "offset"s/deltas,
+slopes, and directions. Point2D's dot and cross products also take Vector2D parameters.
 
 --------------------------------------------------------------------------------
 

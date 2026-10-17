@@ -28,8 +28,8 @@ bool LineCircle(const Line &l, const Circle &c, Point2D &contactPoint) {
     Point2D b = l.p2;
 
     float x; // distance from a to the closest point on line ab
-    Point2D ab = b - a; // vector from a to b
-    Point2D ac = c.center - a; // vector from a to p
+    Vector2D ab = b - a; // vector from a to b
+    Vector2D ac = c.center - a; // vector from a to p
     float ablen = a.Distance(b); // length of ab
 
     if (ablen == 0){ // ab is a single point, check if its in the circle

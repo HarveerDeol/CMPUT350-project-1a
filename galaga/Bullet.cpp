@@ -9,7 +9,7 @@
  * @param player True if fired by the player, false if fired by an enemy (bool).
  * @param parent The object that fired this bullet (std::weak_ptr<CMPUT350::GameObject>).
  */
-Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent)
+Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Vector2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent)
     : mLocation(location), mPrevLocation(location), mHeading(heading), mIsPlayerBullet(player), mParent(parent)
 {
     mHeading.Normalize(); // ensure movement speed is consistent regardless of the input vector's length

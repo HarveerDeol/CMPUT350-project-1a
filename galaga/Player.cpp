@@ -221,17 +221,11 @@ const CMPUT350::Rect& Player::GetBounds()
 }
 
 /// @brief Returns the collision shapes making up this object, in local coordinates relative to GetLocation. @return The shapes used for collision (const std::vector<CMPUT350::Shape>&).
-const std::vector<CMPUT350::Shape> &Player::GetShapes() { 
-    return mShapes; 
-}
+const std::vector<CMPUT350::Shape> &Player::GetShapes() { return mShapes; }
 
 /// @brief Returns the point all rotation and drawing is relative to. @return The centre of the object in screen coordinates (CMPUT350::Point2D).
-CMPUT350::Point2D Player::GetLocation() const { 
-    return mLocation; 
-}
+CMPUT350::Point2D Player::GetLocation() const { return mLocation; }
 
 /// @brief Returns the object's rotation. @return The rotation in radians, always 0 for this object (float).
-float Player::GetRotation() const { 
-    return 0.0f; 
-}
+float Player::GetRotation() const { return 0.0f; }
 

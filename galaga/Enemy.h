@@ -64,7 +64,7 @@ protected:
 
     // ---- Behaviour helpers for subclasses ----
     void BeginAttack(const std::vector<CMPUT350::Point2D>& pts, float speed, const CMPUT350::Point2D& target);
-    void FireBullet(CMPUT350::GameContext* context, const CMPUT350::Point2D& direction);
+    void FireBullet(CMPUT350::GameContext* context, const CMPUT350::Vector2D& direction);
     CMPUT350::RGBColor CurrentColor() const;
 
     CMPUT350::Point2D mLocation;          // current centre, in screen coordinates

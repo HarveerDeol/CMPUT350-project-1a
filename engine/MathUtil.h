@@ -6,6 +6,10 @@
 
 namespace CMPUT350 {
 
+struct Point2D;
+/// @brief A direction or displacement in 2D. An alias for Point2D.
+using Vector2D = Point2D;
+
 struct Point2D {
     float x, y;
     /// @brief Creates a point with the given coordinates. @param x Horizontal coordinate (float). @param y Vertical coordinate (float).
@@ -112,31 +116,31 @@ struct Point2D {
     }
 
     /// @brief Dot product. @param other The other point (Point2D). @return x*other.x + y*other.y (float).
-    float operator*(const Point2D &other) const {
+    float operator*(const Vector2D &other) const {
         // dot product of this and other
         return x*other.x + y*other.y;
     }
 
     /// @brief Dot product with this point. @param b The other point (Point2D). @return The scalar dot product (float).
-    float Dot(Point2D b) const {
+    float Dot(Vector2D b) const {
         // dot product of this and b
         return x*b.x + y*b.y;
     }
 
     /// @brief Dot product of two points. @param a First point (Point2D). @param b Second point (Point2D). @return The scalar dot product (float).
-    static float Dot(Point2D a, Point2D b) {
+    static float Dot(Vector2D a, Vector2D b) {
         // dot product of a and b
         return a.x*b.x + a.y*b.y;
     }
 
     /// @brief 2D cross product of two points; zero when they are parallel. @param a First point (Point2D). @param b Second point (Point2D). @return a.x*b.y - a.y*b.x (float).
-    static float Cross(Point2D a, Point2D b) {
+    static float Cross(Vector2D a, Vector2D b) {
         // cross product of a and b
         return a.x*b.y - a.y*b.x;
     }
 
     /// @brief 2D cross product with this point. @param b The other point (Point2D). @return x*b.y - y*b.x (float).
-    float Cross(Point2D b) const {
+    float Cross(Vector2D b) const {
         // cross product of this and b
         return x * b.y - y * b.x;
     }
@@ -191,8 +195,8 @@ struct Line {
      */
     Point2D ClosestPoint(const Point2D &p) const {
         // returns the closest point on the line segment to point p
-        Point2D ap = p - p1; // vector from p1 to p
-        Point2D ab = p2 - p1; // vector from p1 to p2
+        Vector2D ap = p - p1; // vector from p1 to p
+        Vector2D ab = p2 - p1; // vector from p1 to p2
         float ablen = Length(); // length of ab
         if (ablen == 0) {
             // ab is a single point, therefore is the point we want
@@ -226,8 +230,8 @@ struct Line {
         Point2D c = other.p1; // point c
         Point2D d = other.p2; // point d
 
-        Point2D vab = b - a; // vector ab
-        Point2D vcd = d - c; // vector cd
+        Vector2D vab = b - a; // vector ab
+        Vector2D vcd = d - c; // vector cd
 
         float t, u; // fraction (0–1) along ab and cd where the crossing lies.
         // calculate u

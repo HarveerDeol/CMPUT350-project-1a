@@ -15,9 +15,9 @@ public:
     EngineView *mEngineView;
     DrawContext *ScreenContext;
     DrawContext *GUIContext;
-	std::weak_ptr<GameObject> CurrObject;
-	NotificationManager *mNotificationManager;
-	int currentFrame;
+    std::weak_ptr<GameObject> CurrObject;
+    NotificationManager *mNotificationManager;
+    int currentFrame;
 
 };
 

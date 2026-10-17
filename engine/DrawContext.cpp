@@ -11,7 +11,7 @@ DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_p
     : mWindow(window), mFont(font), mOffset(0, 0), mRotation(0.0f) {}
 
 /** @brief Sets the position offset used by drawing operations. @param p The offset (Point2D). */
-void DrawContext::SetContextOffset(Point2D p) { mOffset = p; }
+void DrawContext::SetContextOffset(Vector2D p) { mOffset = p; }
 
 /** @brief Sets the rotation used by drawing operations. @param rotation Rotation in radians (float). */
 void DrawContext::SetContextRotation(float rotation) { mRotation = rotation; }
