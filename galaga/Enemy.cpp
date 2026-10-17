@@ -136,7 +136,7 @@ bool Enemy::AdvancePath()
 
     mLocation = CMPUT350::Bezier::GetPoint(mPathPts, t);
 
-    CMPUT350::Point2D slope = CMPUT350::Bezier::GetSlope(mPathPts, t);
+    CMPUT350::Vector2D slope = CMPUT350::Bezier::GetSlope(mPathPts, t);
     if (slope.x != 0.0f || slope.y != 0.0f)
     {
         mRotation = std::atan2(slope.y, slope.x) - kPi / 2.0f;
@@ -161,7 +161,7 @@ void Enemy::StartReturn()
 {
     mState = State::kReturning;
     CMPUT350::Point2D top(mFormationPos.x, -kOffscreenMargin);
-    CMPUT350::Point2D delta = mFormationPos - top;
+    CMPUT350::Vector2D delta = mFormationPos - top;
     StartPath({top, top + delta * (1.0f / 3.0f), top + delta * (2.0f / 3.0f), mFormationPos}, kEntrySpeed);
 }
 
@@ -263,7 +263,7 @@ void Enemy::BeginAttack(const std::vector<CMPUT350::Point2D>& pts, float speed, 
  * Must be called from an engine callback (Update/LateUpdate) so context->CurrObject is this enemy.
  * The bullet destroys itself if this enemy dies.
  */
-void Enemy::FireBullet(CMPUT350::GameContext* context, const CMPUT350::Point2D& direction)
+void Enemy::FireBullet(CMPUT350::GameContext* context, const CMPUT350::Vector2D& direction)
 {
     auto bullet = std::make_shared<Bullet>(mLocation, direction, false, context->CurrObject);
     context->mEngineView->AddGameObject(bullet);

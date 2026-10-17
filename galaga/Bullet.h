@@ -9,7 +9,7 @@
 class Bullet : public CMPUT350::CollisionObject
 {
 public:
-    Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent);
+    Bullet(CMPUT350::Point2D location, CMPUT350::Vector2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent);
     bool IsPlayerBullet();
 
     // GameObject Functions
@@ -37,7 +37,7 @@ private:
     static constexpr float kHalfWidth = 2.0f; // half the width of the bullet's bounding box
     CMPUT350::Point2D mLocation;
     CMPUT350::Point2D mPrevLocation;
-    CMPUT350::Point2D mHeading; // normalized direction of travel
+    CMPUT350::Vector2D mHeading; // normalized direction of travel
     CMPUT350::Rect mBounds;
     static constexpr int kDeathFrames = 4;
 

@@ -24,9 +24,9 @@ Point2D Bezier::GetPoint(float t) const {
 /**
  * @brief Returns the tangent of the stored curve at parameter t.
  * @param t Position along the whole curve, from 0 to the number of segments (float).
- * @return The tangent vector, not normalized, or the origin if the stored control points do not form at least one cubic segment (Point2D).
+ * @return The tangent vector, not normalized, or the origin if the stored control points do not form at least one cubic segment (Vector2D).
  */
-Point2D Bezier::GetSlope(float t) const {
+Vector2D Bezier::GetSlope(float t) const {
     return GetSlope(mPoints, t);
 }
 
@@ -57,9 +57,9 @@ Point2D Bezier::GetPoint(const std::vector<Point2D> &pts, float t) {
  * @brief Returns the tangent of a curve at parameter t without constructing a Bezier object.
  * @param pts The control points defining the curve (const std::vector<Point2D>&).
  * @param t Position along the whole curve, from 0 to the number of segments (float).
- * @return The tangent vector, not normalized, or the origin if pts does not form at least one cubic segment (Point2D). Use atan2 on it to get a heading in radians.
+ * @return The tangent vector, not normalized, or the origin if pts does not form at least one cubic segment (Vector2D). Use atan2 on it to get a heading in radians.
  */
-Point2D Bezier::GetSlope(const std::vector<Point2D> &pts, float t) {
+Vector2D Bezier::GetSlope(const std::vector<Point2D> &pts, float t) {
     size_t base;
     float u;
     if (!GetSegment(pts, t, base, u))

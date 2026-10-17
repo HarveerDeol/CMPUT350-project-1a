@@ -43,7 +43,7 @@ public:
 
 private:
 	friend class GameEngine;
-	void SetContextOffset(Point2D p);
+	void SetContextOffset(Vector2D p);
 	void SetContextRotation(float rotation);
 	Point2D Transform(Point2D p);
 	Point2D ReverseTransform(Point2D p);
@@ -51,7 +51,7 @@ private:
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
-    Point2D mOffset;
+    Vector2D mOffset;
     float mRotation;
 };
 
